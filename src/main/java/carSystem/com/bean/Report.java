@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class Report extends BaseBean {
     private String num;
+    private String name;
     private Integer userId;
     private Integer customerId;
     private String serviceList;
@@ -25,6 +26,14 @@ public class Report extends BaseBean {
 
     public void setNum(String num) {
         this.num = num;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getUserId() {

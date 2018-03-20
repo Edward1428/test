@@ -2,6 +2,8 @@ package carSystem.com.service;
 
 import carSystem.com.bean.Customer;
 import carSystem.com.bean.Report;
+import carSystem.com.bean.Role;
+import carSystem.com.bean.User;
 import carSystem.com.bean.report.ali.*;
 import carSystem.com.bean.report.baiRong.BankFourPro;
 import carSystem.com.bean.report.baiRong.TelChecks;
@@ -19,6 +21,7 @@ import carSystem.com.service.report.baiRong.TelStatusService;
 import carSystem.com.service.report.baiRong.strategy.*;
 import carSystem.com.service.report.jd.JdService;
 import carSystem.com.utils.FileUtils;
+import carSystem.com.vo.ListQuery;
 import carSystem.com.vo.ReportJson;
 import carSystem.com.vo.ReportVO;
 import com.alibaba.fastjson.JSON;
@@ -164,6 +167,65 @@ public class ReportService {
 
     public List<Report> findAll() {
         return reportDAO.findAll();
+    }
+
+    public List<Report> listQuery(User user, ListQuery query) {
+        String sql = " 1=1 ";
+
+        String nameSql = "";
+        String numSql = "";
+        String roleSql = "";
+        String limitSql = "";
+
+
+        if (StringUtils.isNotBlank(query.getName())) {
+            nameSql = " and name like '%" +query.getName() +"%' ";
+            sql = sql + nameSql;
+        }
+
+        if (StringUtils.isNotBlank(query.getNum())) {
+            numSql = " and num like '%" + query.getNum() +"%' ";
+            sql = sql + numSql;
+        }
+
+        if (user.getRole() != Role.ADMIN.getRole()) {
+            roleSql = " and userId = " + user.getId().toString();
+            sql = sql + roleSql;
+        }
+
+        Integer page = query.getPage();
+        Integer limit = query.getLimit();
+        if (page > 0 && limit > 0) {
+            Integer start = (page - 1) * limit;
+            limitSql = " limit "+start.toString()+","+limit.toString();
+            sql = sql + limitSql;
+        }
+
+        return reportDAO.findAll(sql);
+    }
+
+    public Integer listQuerySize(User user, ListQuery query) {
+        String sql = " 1=1 ";
+
+        String nameSql = "";
+        String numSql = "";
+        String roleSql = "";
+
+        if (StringUtils.isNotBlank(query.getName())) {
+            nameSql = " and name like '%" +query.getName() +"%' ";
+            sql = sql + nameSql;
+        }
+
+        if (StringUtils.isNotBlank(query.getNum())) {
+            numSql = " and num like '%" + query.getNum() +"%' ";
+            sql = sql + numSql;
+        }
+
+        if (user.getRole() != Role.ADMIN.getRole()) {
+            roleSql = " and userId = " + user.getId().toString();
+            sql = sql + roleSql;
+        }
+        return reportDAO.count(sql);
     }
 
     private JSONArray toJsonArray(JSONObject data, JSONObject document) {

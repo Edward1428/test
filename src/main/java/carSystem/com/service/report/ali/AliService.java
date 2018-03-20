@@ -42,13 +42,17 @@ public class AliService {
     public AliApi aliApi(Customer customer, Integer reportId) {
         AliApi aliApi = new AliApi();
         IdCard  idCard = idCardApi(customer, reportId);
-        BankCard bankCard = bankCardApi(customer, reportId);
+
         CellCheck cellCheck = cellCheck(customer, reportId);
         Cell cell = cellApi(customer, reportId);
         aliApi.setIdCard(idCard);
-        aliApi.setBankCard(bankCard);
         aliApi.setCell(cell);
         aliApi.setCellCheck(cellCheck);
+        if (StringUtils.isNotBlank(customer.getBankId())) {
+            BankCard bankCard = bankCardApi(customer, reportId);
+            aliApi.setBankCard(bankCard);
+        }
+
         return aliApi;
     }
 

@@ -626,7 +626,7 @@ public class TableService {
         eight.put("color", stringColor(blackName.getBlackCount5()));
 
         nine.put("key", "不良记录");
-        nine.put("value", badRecord.getDescription());
+        nine.put("value", blackRecordToString(badRecord.getDescription()));
         nine.put("color", stringColor(badRecord.getDescription()));
 
         JSONArray jsonArray = new JSONArray();
@@ -645,32 +645,37 @@ public class TableService {
 
     //阿里三项验证(身份证、手机、银行卡）
     private JSONObject toCheck(@NotNull Integer reportId) {
+        Customer customer = customerService.findByReportId(reportId);
         IdCard idCard = aliService.findIdCard(reportId);
-        BankCard bankCard = aliService.findBankCard(reportId);
+
         CellCheck cellCheck = aliService.findCellCheck(reportId);
+        JSONObject check = new JSONObject();
 
         JSONObject idCardJson = new JSONObject();
-        idCardJson.put("msg", idCard.getMessage());
+        idCardJson.put("msg", stringToMsg(idCard.getMessage()));
         idCardJson.put("color", stringColor(idCard.getMessage()));
         JSONArray one = new JSONArray();
         one.add(idCardJson);
 
         JSONObject cellJson = new JSONObject();
-        cellJson.put("msg", cellCheck.getMsg());
+        cellJson.put("msg", stringToMsg(cellCheck.getMsg()));
         cellJson.put("color", stringColor(cellCheck.getMsg()));
         JSONArray two = new JSONArray();
         two.add(cellJson);
 
-        JSONObject bankCardJson = new JSONObject();
-        bankCardJson.put("msg", bankCard.getMessage());
-        bankCardJson.put("color", stringColor(bankCard.getMessage()));
-        JSONArray three = new JSONArray();
-        three.add(bankCardJson);
-
-        JSONObject check = new JSONObject();
         check.put("idCard", one);
         check.put("cell", two);
-        check.put("bankCard", three);
+
+        if (StringUtils.isNotBlank(customer.getBankId())) {
+            BankCard bankCard = aliService.findBankCard(reportId);
+            JSONObject bankCardJson = new JSONObject();
+            bankCardJson.put("msg", stringToMsg(bankCard.getMessage()));
+            bankCardJson.put("color", stringColor(bankCard.getMessage()));
+            JSONArray three = new JSONArray();
+            three.add(bankCardJson);
+            check.put("bankCard", three);
+        }
+
         check.put("photo", "data:image/png;base64,"+idCard.getIdCardPhoto());
         return check;
     }
@@ -726,9 +731,9 @@ public class TableService {
         Matcher m = p.matcher(s);
         if (StringUtils.isNotBlank(s)) {
             if (s.equals("未命中") || s.equals("验证成功") || s.equals("有效身份证") || s.equals("认证成功")
-                    || s.equals("查询成功_无数据")) {
+                    || s.equals("查询成功_无数据") || s.equals("一致")) {
                 return 1;
-            } else if (s.equals("验证失败") || m.find()) {
+            } else if (s.equals("验证失败") || m.find() || s.equals("不一致")) {
                 return -1;
             } else {
                 return 0;
@@ -737,4 +742,32 @@ public class TableService {
             return 0;
         }
     }
+
+    private String stringToMsg(String s) {
+        if (StringUtils.isNotBlank(s)) {
+            if (s.equals("有效身份证") || s.equals("认证成功") || s.equals("验证成功")) {
+                s = "一致";
+            } else {
+                s = "不一致";
+            }
+        } else {
+            s = "未验证";
+        }
+        return s;
+    }
+
+    private String blackRecordToString(String s) {
+        if (StringUtils.isNotBlank(s)) {
+            if (s.equals("查询成功_无数据")) {
+                s = "未命中";
+                return s;
+            } else {
+                return s;
+            }
+        } else {
+            s = "未验证";
+            return s;
+        }
+    }
+
 }

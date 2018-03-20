@@ -23,10 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/api/report")
@@ -50,7 +47,7 @@ public class ReportController {
     @Autowired
     private TableService tableService;
 
-    @LoginRequired
+    @LoginRequired(role = Role.ALL)
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody
     Result newReport(@RequestBody CustomerVO customerVO, @RequestAttribute User user) {
@@ -67,6 +64,7 @@ public class ReportController {
 
         Integer customerId = customerService.insert(customer);
         Report report = new Report();
+        report.setName(customer.getName());
         report.setNum(Report.generateCode(9));
         report.setUserId(user.getId());
         report.setCustomerId(customerId);
@@ -113,28 +111,38 @@ public class ReportController {
     }
 
     @LoginRequired(role = Role.ALL)
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.POST, value = "/listQuery")
     public @ResponseBody
-    Result getAllReport(@RequestAttribute User user) {
+    Result getAllReport(@RequestAttribute User user, @RequestBody(required = false) ListQuery listQuery) {
         List<ReportTableVO> reportTableVOList = new ArrayList<>();
         List<Report> reportList = new ArrayList<>();
-        if (user.getRole() == Role.ADMIN.getRole()) {
-            reportList = reportService.findAll();
-        } else if (user.getRole() == Role.CHANNEL.getRole()){
-            reportList = reportService.findAllByUserId(user.getId());
+        Integer total = 0;
+
+        if (listQuery == null) {
+            if (user.getRole() == Role.ADMIN.getRole()) {
+                reportList = reportService.findAll();
+            } else if (user.getRole() == Role.CHANNEL.getRole()){
+                reportList = reportService.findAllByUserId(user.getId());
+            }
+            total = reportList.size();
+        } else {
+            reportList = reportService.listQuery(user, listQuery);
+            total = reportService.listQuerySize(user, listQuery);
         }
+
         if (reportList.size() > 0) {
             for (Report report : reportList) {
-                Customer customer = customerService.findById(report.getCustomerId());
                 ReportTableVO reportTableVO = new ReportTableVO();
-                reportTableVO.setCustomer(customer);
                 reportTableVO.setNickName(user.getNickName());
                 reportTableVO.setReport(report);
                 reportTableVO.setService(ReportTableVO.toService(report.getServiceList()));
                 reportTableVOList.add(reportTableVO);
             }
         }
-        return Result.success(reportTableVOList);
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", reportTableVOList);
+        map.put("total", total);
+        return Result.success(map);
     }
 
     @LoginRequired(role = Role.ALL)

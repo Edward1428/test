@@ -186,6 +186,7 @@ public class JdService {
                             blackNameList.setBlackFacts(object.getString("blackFacts"));
                             blackNameList.setBlackPublishSource(object.getString("blackPublishSource"));
                             blackNameList.setBlackHappenDate(object.getString("blackHappenDate"));
+                            blackNameList.setBlackAmt(object.getString("blackAmt"));
                             blackNameList.setBlackNameId(blackNameId);
                             blackNameListDAO.insert(blackNameList);
                         }
