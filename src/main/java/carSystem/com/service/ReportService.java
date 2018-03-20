@@ -175,6 +175,7 @@ public class ReportService {
         String nameSql = "";
         String numSql = "";
         String roleSql = "";
+        String orderBySql = " order by created_at desc ";
         String limitSql = "";
 
 
@@ -192,6 +193,7 @@ public class ReportService {
             roleSql = " and userId = " + user.getId().toString();
             sql = sql + roleSql;
         }
+        sql = sql + orderBySql;
 
         Integer page = query.getPage();
         Integer limit = query.getLimit();
