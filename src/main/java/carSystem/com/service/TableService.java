@@ -747,6 +747,8 @@ public class TableService {
         if (StringUtils.isNotBlank(s)) {
             if (s.equals("有效身份证") || s.equals("认证成功") || s.equals("验证成功")) {
                 s = "一致";
+            } else if (s.equals("无效身份证")) {
+                s = "无效身份证";
             } else {
                 s = "不一致";
             }

@@ -67,7 +67,7 @@ public class AliService {
             JSONObject data = json.getJSONObject("data");
             String code = data.getString("code");
 
-            if (code.equals("1000")) {
+            if (code.equals("1000") || code.equals("1001") || code.equals("1103")) {
                 idCard.setFlag(1);
                 idCard.setIdCardPhoto(data.getString("idCardPhoto"));
                 idCard.setMessage(data.getString("message"));

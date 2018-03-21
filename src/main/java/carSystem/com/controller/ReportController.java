@@ -18,6 +18,7 @@ import carSystem.com.service.TableService;
 import carSystem.com.service.UserService;
 import carSystem.com.service.report.ApiService;
 import carSystem.com.service.report.jd.JdService;
+import carSystem.com.utils.IdcardValidatorUtil;
 import carSystem.com.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -60,6 +61,10 @@ public class ReportController {
             if (set.size() != serviceList.size()) {
                 return Result.failed("非法操作1");
             }
+        }
+
+        if (! IdcardValidatorUtil.isValidatedAllIdcard(customer.getIdNum())) {
+            return Result.failed("身份证号码不合法");
         }
 
         Integer customerId = customerService.insert(customer);

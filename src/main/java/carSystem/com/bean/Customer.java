@@ -72,4 +72,8 @@ public class Customer extends BaseBean {
     public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
     }
+
+
+
+
 }

@@ -4,6 +4,7 @@ import carSystem.com.bean.Customer;
 import carSystem.com.bean.User;
 import carSystem.com.bean.report.baiRong.*;
 import carSystem.com.service.report.ApiService;
+import carSystem.com.utils.IdcardValidatorUtil;
 import com.bfd.facade.MerchantServer;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -138,5 +139,12 @@ public class ApplicationTest {
 	public void sh512() {
 //		String s = "123456";
 //		System.out.println(User.sha512EncodePassword(s));
+	}
+
+	@Test
+	public void idCard() {
+//		String s = "133029107501015478";
+//		boolean b = IdcardValidatorUtil.isValidatedAllIdcard(s);
+//		System.out.println(b);
 	}
 }
