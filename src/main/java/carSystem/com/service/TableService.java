@@ -599,11 +599,11 @@ public class TableService {
 
         two.put("key", "手机使用情况");
         two.put("value", cellLong.getDescription());
-        two.put("color", stringColor(cellLong.getDescription()));
+        two.put("color", 2);
 
         three.put("key", "手机归属地");
         three.put("value", cell.getProv()+cell.getCity()+"（"+cell.getName()+"）");
-        three.put("color", 0);
+        three.put("color", 2);
 
         four.put("key", blackName.getBlackType1());
         four.put("value", blackName.getBlackCount1());

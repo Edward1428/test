@@ -107,8 +107,10 @@ public class ReportController {
     public @ResponseBody
     Result getReport(@PathVariable Integer reportId, @RequestAttribute User user) {
         Report report = reportService.findById(reportId);
-        if (report.getUserId() != user.getId()) {
-            return Result.failed("非法操作");
+        if (user.getRole() != Role.ADMIN.getRole()) {
+            if (report.getUserId() != user.getId()) {
+                return Result.failed("非法操作");
+            }
         }
 
         TableData tableData = tableService.tableData(reportId);
@@ -137,8 +139,9 @@ public class ReportController {
 
         if (reportList.size() > 0) {
             for (Report report : reportList) {
+                User author = userService.findById(report.getUserId());
                 ReportTableVO reportTableVO = new ReportTableVO();
-                reportTableVO.setNickName(user.getNickName());
+                reportTableVO.setNickName(author.getNickName());
                 reportTableVO.setReport(report);
                 reportTableVO.setService(ReportTableVO.toService(report.getServiceList()));
                 reportTableVOList.add(reportTableVO);

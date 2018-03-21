@@ -104,8 +104,10 @@ public class WXReportController {
             return Result.failed("请登陆");
         } else {
             Report report = reportService.findById(reportId);
-            if (report.getUserId() != user.getId()) {
-                return Result.failed("非法操作");
+            if (user.getRole() != Role.ADMIN.getRole()) {
+                if (report.getUserId() != user.getId()) {
+                    return Result.failed("非法操作");
+                }
             }
 
             TableData tableData = tableService.tableData(reportId);
@@ -138,8 +140,9 @@ public class WXReportController {
 
             if (reportList.size() > 0) {
                 for (Report report : reportList) {
+                    User author = userService.findById(report.getUserId());
                     ReportTableVO reportTableVO = new ReportTableVO();
-                    reportTableVO.setNickName(user.getNickName());
+                    reportTableVO.setNickName(author.getNickName());
                     reportTableVO.setReport(report);
                     reportTableVO.setService(ReportTableVO.toService(report.getServiceList()));
                     reportTableVOList.add(reportTableVO);
