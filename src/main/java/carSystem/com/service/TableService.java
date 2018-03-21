@@ -674,6 +674,13 @@ public class TableService {
             JSONArray three = new JSONArray();
             three.add(bankCardJson);
             check.put("bankCard", three);
+        } else {
+            JSONObject bankCardJson = new JSONObject();
+            bankCardJson.put("msg", "未验证");
+            bankCardJson.put("color", -1);
+            JSONArray three = new JSONArray();
+            three.add(bankCardJson);
+            check.put("bankCard", three);
         }
 
         check.put("photo", "data:image/png;base64,"+idCard.getIdCardPhoto());
@@ -731,7 +738,7 @@ public class TableService {
         Matcher m = p.matcher(s);
         if (StringUtils.isNotBlank(s)) {
             if (s.equals("未命中") || s.equals("验证成功") || s.equals("有效身份证") || s.equals("认证成功")
-                    || s.equals("查询成功_无数据") || s.equals("一致")) {
+                    || s.equals("查询成功_无数据") || s.equals("一致") || s.equals("无该手机号记录")) {
                 return 1;
             } else if (s.equals("验证失败") || m.find() || s.equals("不一致")) {
                 return -1;
@@ -745,7 +752,7 @@ public class TableService {
 
     private String stringToMsg(String s) {
         if (StringUtils.isNotBlank(s)) {
-            if (s.equals("有效身份证") || s.equals("认证成功") || s.equals("验证成功")) {
+            if (s.equals("有效身份证") || s.equals("认证成功") || s.equals("验证成功") || s.equals("无该手机号记录")) {
                 s = "一致";
             } else if (s.equals("无效身份证")) {
                 s = "无效身份证";
@@ -759,13 +766,39 @@ public class TableService {
     }
 
     private String blackRecordToString(String s) {
+        Pattern p = Pattern.compile("^查询成功_有数据");
+        Matcher m = p.matcher(s);
         if (StringUtils.isNotBlank(s)) {
             if (s.equals("查询成功_无数据")) {
                 s = "未命中";
                 return s;
-            } else {
-                return s;
+            } else if (m.find()){
+                String string = "";
+                Pattern A = Pattern.compile("A");
+                Matcher a = p.matcher(s);
+                Pattern B = Pattern.compile("B");
+                Matcher b = p.matcher(s);
+                Pattern C = Pattern.compile("C");
+                Matcher c = p.matcher(s);
+                Pattern D = Pattern.compile("D");
+                Matcher d = p.matcher(s);
+
+                if (a.find()) {
+                    string = string+ "在逃;";
+                }
+                if (b.find()) {
+                    string = string+ "前科;";
+                }
+                if (c.find()) {
+                    string = string + "吸毒;";
+                }
+
+                if (d.find()) {
+                    string = string + "涉毒;";
+                }
+                return string;
             }
+            return s;
         } else {
             s = "未验证";
             return s;

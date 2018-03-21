@@ -249,10 +249,22 @@ public class JdService {
                     if (count == 0) {
                         carshield.setValue("未命中");
                     } else {
+                        String s = "命中"+ count.toString() + "条:";
+
                         JSONArray Desc = data.getJSONArray("Desc");
-                        String s = Desc.getJSONObject(0).getString("value");
-                        for (int i = 1; i < Desc.size(); i++) {
-                            s = s + "; " +  Desc.getJSONObject(i).getString("value");
+                        for (int i = 0; i < Desc.size(); i++) {
+                            //把车背景黑名单中的数据存入黑名单列表中
+//                            BlackNameList blackNameList = new BlackNameList();
+//                            blackNameList.setBlackRiskType("背景黑名单");
+//                            blackNameList.setBlackFactsType(Desc.getJSONObject(i).getString("value"));
+//                            BlackName blackName = findBlackName(reportId);
+//                            if (blackName != null) {
+//                                blackNameList.setBlackNameId(blackName.getId());
+//                            }
+//
+//                            blackNameListDAO.insert(blackNameList);
+                            String string = Desc.getJSONObject(i).getString("Value");
+                            s = s + string +";";
                         }
                         carshield.setValue(s);
                     }

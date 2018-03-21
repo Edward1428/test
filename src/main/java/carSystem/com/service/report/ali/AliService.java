@@ -122,17 +122,24 @@ public class AliService {
         cellCheck.setReportId(reportId);
         try {
             JSONObject json = HttpUtils.httpGetHeaderJsonObj(url, HeaderKey, APPCODE);
-            JSONObject showapi_res_body = json.getJSONObject("showapi_res_body");
-            Integer ret_code = showapi_res_body.getInteger("ret_code");
-            if (ret_code == 0) {
-                cellCheck.setFlag(1);
-            } else {
-                cellCheck.setFlag(-1);
+            if (json != null) {
+                JSONObject showapi_res_body = json.getJSONObject("showapi_res_body");
+                Integer ret_code = showapi_res_body.getInteger("ret_code");
+                if (ret_code == 0) {
+                    cellCheck.setFlag(1);
+                } else if (ret_code == -1) {
+                    cellCheck.setFlag(1);
+                } else {
+                    cellCheck.setFlag(-1);
+                }
+                String code = showapi_res_body.getInteger("code").toString();
+                cellCheck.setCode(code);
+                cellCheck.setMsg(showapi_res_body.getString("msg"));
             }
-            String code = showapi_res_body.getInteger("code").toString();
-            cellCheck.setCode(code);
-            cellCheck.setMsg(showapi_res_body.getString("msg"));
+
         } catch (Exception e) {
+            cellCheck.setMsg("无该手机号记录");
+            cellCheck.setFlag(-1);
             e.printStackTrace();
         }
         cellCheckDAO.insert(cellCheck);
