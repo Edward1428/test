@@ -549,13 +549,18 @@ public class TableService {
         name.put("value", customer.getName());
         JSONObject cell = new JSONObject();
         cell.put("key", "被验证人电话");
-        cell.put("value", customer.getCell());
+        cell.put("value", stringReplace(customer.getCell(), 3, 7));
         JSONObject idCard = new JSONObject();
         idCard.put("key", "被验证人身份证");
-        idCard.put("value", customer.getIdNum());
+        idCard.put("value", stringReplace(customer.getIdNum(), 6, 14));
         JSONObject bank = new JSONObject();
         bank.put("key", "被验证人银行卡");
-        bank.put("value", customer.getBankId());
+        if (StringUtils.isNotBlank(customer.getBankId())) {
+            bank.put("value", stringReplace(customer.getBankId(), 6, 15));
+        } else {
+            bank.put("value", "未验证");
+        }
+
         JSONObject three = new JSONObject();
         three.put("key", "被验证人三天内被查次数");
         three.put("value", customerDAO.threeDaysCount(customer.getIdNum()));
@@ -773,14 +778,14 @@ public class TableService {
                 s = "未命中";
                 return s;
             } else if (m.find()){
-                String string = "";
-                Pattern A = Pattern.compile("A");
+                String string = "命中：";
+                Pattern A = Pattern.compile("[A]");
                 Matcher a = p.matcher(s);
-                Pattern B = Pattern.compile("B");
+                Pattern B = Pattern.compile("[B]");
                 Matcher b = p.matcher(s);
-                Pattern C = Pattern.compile("C");
+                Pattern C = Pattern.compile("[C]");
                 Matcher c = p.matcher(s);
-                Pattern D = Pattern.compile("D");
+                Pattern D = Pattern.compile("[D]");
                 Matcher d = p.matcher(s);
 
                 if (a.find()) {
@@ -805,4 +810,11 @@ public class TableService {
         }
     }
 
+
+    //截取变成4个*
+    private String stringReplace(String string, Integer start, Integer end) {
+        StringBuilder sb = new StringBuilder(string);
+        sb.replace(start, end, "****");
+        return sb.toString();
+    }
 }

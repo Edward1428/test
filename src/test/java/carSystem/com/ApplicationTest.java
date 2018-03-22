@@ -19,6 +19,9 @@ import java.security.MessageDigest;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -146,5 +149,14 @@ public class ApplicationTest {
 //		String s = "133029107501015478";
 //		boolean b = IdcardValidatorUtil.isValidatedAllIdcard(s);
 //		System.out.println(b);
+	}
+
+	@Test
+	public void zz() {
+
+//		String id ="10013319961213602X";
+//		StringBuilder sb = new StringBuilder(id);
+//		sb.replace(6, 10, "****");
+//		System.out.println(sb.toString());
 	}
 }
