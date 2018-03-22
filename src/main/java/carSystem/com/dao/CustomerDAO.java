@@ -14,11 +14,14 @@ public class CustomerDAO extends BaseDAO<Customer> {
 
         DateTime dateTime = new DateTime();
         DateTime threeDaysAgo = dateTime.minusDays(3);
-        return count(" idNum = ? and created_at between timestamp(?) and timestamp(?)", idNum,
+        Integer i = count(" idNum = ? and created_at between timestamp(?) and timestamp(?)", idNum,
                 threeDaysAgo.toString("yyyy-MM-dd HH:mm:ss"), dateTime.toString("yyyy-MM-dd HH:mm:ss"));
+        return i > 0 ? i-1 : i;
+
     }
 
     public Integer countCustomer(String idNum) {
-        return count(" idNum = ? ", idNum);
+        Integer i = count(" idNum = ? ", idNum);
+        return i > 0 ? i-1 : i;
     }
 }
