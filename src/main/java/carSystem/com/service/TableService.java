@@ -780,13 +780,13 @@ public class TableService {
             } else if (m.find()){
                 String string = "命中：";
                 Pattern A = Pattern.compile("[A]");
-                Matcher a = p.matcher(s);
+                Matcher a = A.matcher(s);
                 Pattern B = Pattern.compile("[B]");
-                Matcher b = p.matcher(s);
+                Matcher b = B.matcher(s);
                 Pattern C = Pattern.compile("[C]");
-                Matcher c = p.matcher(s);
+                Matcher c = C.matcher(s);
                 Pattern D = Pattern.compile("[D]");
-                Matcher d = p.matcher(s);
+                Matcher d = D.matcher(s);
 
                 if (a.find()) {
                     string = string+ "在逃;";
