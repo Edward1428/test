@@ -249,7 +249,7 @@ public class JdService {
                     if (count == 0) {
                         carshield.setValue("未命中");
                     } else {
-                        String s = "命中"+ count.toString() + "条:";
+                        String s = "";
 
                         JSONArray Desc = data.getJSONArray("Desc");
                         for (int i = 0; i < Desc.size(); i++) {
