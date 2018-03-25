@@ -630,9 +630,12 @@ public class TableService {
         eight.put("value", blackName.getBlackCount5());
         eight.put("color", stringColor(blackName.getBlackCount5()));
 
-        nine.put("key", "不良记录");
-        nine.put("value", blackRecordToString(badRecord.getDescription()));
-        nine.put("color", stringColor(badRecord.getDescription()));
+        if (badRecord != null) {
+            nine.put("key", "不良记录");
+            nine.put("value", blackRecordToString(badRecord.getDescription()));
+            nine.put("color", stringColor(badRecord.getDescription()));
+        }
+
 
         JSONArray jsonArray = new JSONArray();
         jsonArray.add(one);

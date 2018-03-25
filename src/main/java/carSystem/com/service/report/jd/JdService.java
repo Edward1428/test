@@ -39,12 +39,12 @@ public class JdService {
     public JdApi jdApi(Customer customer, Integer reportId) {
         JdApi jdApi = new JdApi();
         CellLong cellLong = cellLongApi(customer, reportId);
-        BadRecord badRecord = badRecordApi(customer, reportId);
+//        BadRecord badRecord = badRecordApi(customer, reportId);
         BlackName blackName = blackNameApi(customer, reportId);
         Carshield carshield = carshieldApi(customer, reportId);
         List<BlackNameList> blackNameLists = findBlackNameList(blackName.getId());
         jdApi.setCellLong(cellLong);
-        jdApi.setBadRecord(badRecord);
+//        jdApi.setBadRecord(badRecord);
         jdApi.setCarshield(carshield);
         jdApi.setBlackNameLists(blackNameLists);
         return jdApi;
