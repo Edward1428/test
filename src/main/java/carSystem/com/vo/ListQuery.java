@@ -5,6 +5,7 @@ public class ListQuery {
     private Integer limit;
     private String num;
     private String name;
+    private Integer userId;
 
     public Integer getPage() {
         return page;
@@ -36,5 +37,13 @@ public class ListQuery {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

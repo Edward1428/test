@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -32,6 +35,22 @@ public class QueryHelper {
             logger.info(e.toString());
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public long stateLong(String sql, Object... params) {
+        List<Long> longList = jdbcTemplate.query(sql, params, new RowMapper<Long>() {
+            public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getLong(1);
+            }
+        });
+        if ( longList.isEmpty() ){
+            return 0;
+        }else if ( longList.size() == 1 ) { // list contains exactly 1 element
+            return longList.get(0);
+        }else{  // list contains more than 1 elements
+            logger.error("sql result: more then 1 elements!!");
+            return longList.get(0);
         }
     }
 

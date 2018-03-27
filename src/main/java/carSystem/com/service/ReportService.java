@@ -175,6 +175,7 @@ public class ReportService {
         String nameSql = "";
         String numSql = "";
         String roleSql = "";
+        String channelSql = "";
         String orderBySql = " order by created_at desc ";
         String limitSql = "";
 
@@ -192,6 +193,9 @@ public class ReportService {
         if (user.getRole() != Role.ADMIN.getRole()) {
             roleSql = " and userId = " + user.getId().toString();
             sql = sql + roleSql;
+        } else if (user.getRole() == Role.ADMIN.getRole() && query.getUserId() != null) {
+            channelSql = " and userId = " + query.getUserId();
+            sql = sql + channelSql;
         }
         sql = sql + orderBySql;
 
@@ -212,6 +216,7 @@ public class ReportService {
         String nameSql = "";
         String numSql = "";
         String roleSql = "";
+        String channelSql = "";
 
         if (StringUtils.isNotBlank(query.getName())) {
             nameSql = " and name like '%" +query.getName() +"%' ";
@@ -226,6 +231,9 @@ public class ReportService {
         if (user.getRole() != Role.ADMIN.getRole()) {
             roleSql = " and userId = " + user.getId().toString();
             sql = sql + roleSql;
+        } else if (user.getRole() == Role.ADMIN.getRole() && query.getUserId() != null) {
+            channelSql = " and userId = " + query.getUserId();
+            sql = sql + channelSql;
         }
         return reportDAO.count(sql);
     }

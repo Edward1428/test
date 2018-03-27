@@ -13,6 +13,7 @@ public class Report extends BaseBean {
     private Integer userId;
     private Integer customerId;
     private String serviceList;
+    private Integer payout;
     private Short status;
     private Timestamp created_at;
 
@@ -58,6 +59,14 @@ public class Report extends BaseBean {
 
     public void setServiceList(String serviceList) {
         this.serviceList = serviceList;
+    }
+
+    public Integer getPayout() {
+        return payout;
+    }
+
+    public void setPayout(Integer payout) {
+        this.payout = payout;
     }
 
     public Short getStatus() {

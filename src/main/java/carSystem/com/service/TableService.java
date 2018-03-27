@@ -804,6 +804,10 @@ public class TableService {
                 if (d.find()) {
                     string = string + "涉毒;";
                 }
+
+                if (!a.find() && !b.find() && c.find() && !d.find()) {
+                    string = "命中:前科";
+                }
                 return string;
             }
             return s;

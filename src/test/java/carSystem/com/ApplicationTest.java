@@ -8,6 +8,7 @@ import carSystem.com.utils.IdcardValidatorUtil;
 import com.bfd.facade.MerchantServer;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,10 +154,45 @@ public class ApplicationTest {
 
 	@Test
 	public void zz() {
+		String s = "查询成功_有数据,B";
+		Pattern p = Pattern.compile("^查询成功_有数据,");
+		Matcher m = p.matcher(s);
+		if (StringUtils.isNotBlank(s)) {
+			if (s.equals("查询成功_无数据")) {
+				s = "未命中";
 
-//		String id ="10013319961213602X";
-//		StringBuilder sb = new StringBuilder(id);
-//		sb.replace(6, 10, "****");
-//		System.out.println(sb.toString());
+			} else if (m.find()) {
+				String string = "命中：";
+				Pattern A = Pattern.compile("[A]");
+				Matcher a = A.matcher(s);
+				Pattern B = Pattern.compile("[B]");
+				Matcher b = B.matcher(s);
+				Pattern C = Pattern.compile("[C]");
+				Matcher c = C.matcher(s);
+				Pattern D = Pattern.compile("[D]");
+				Matcher d = D.matcher(s);
+
+				if (a.find()) {
+					string = string + "在逃;";
+				}
+				if (b.find()) {
+					string = string + "前科;";
+				}
+				if (c.find()) {
+					string = string + "吸毒;";
+				}
+
+				if (d.find()) {
+					string = string + "涉毒;";
+				}
+				s = string;
+			} else {
+				s = "未命中";
+			}
+
+		} else {
+			s = "未验证";
+		}
+		System.out.println(s);
 	}
 }

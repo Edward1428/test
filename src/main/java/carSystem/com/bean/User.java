@@ -17,6 +17,9 @@ public class User extends BaseBean {
     private static final int ENCODE_SHA1 = 40;
     private static final int ENCODE_SHA512 = 128;
 
+    public static final short ABLE = 1;
+    public static final short DISABLE = -1;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public User(String nickName, String password) {
@@ -36,6 +39,8 @@ public class User extends BaseBean {
     private Short role;
 
     private String email;
+
+    private Integer integral;
 
     private String headUrl;
 
@@ -125,6 +130,14 @@ public class User extends BaseBean {
 
     public void setHeadUrl(String headUrl) {
         this.headUrl = headUrl;
+    }
+
+    public Integer getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
     }
 
     public void setLast_logined_at(Timestamp last_logined_at) {
