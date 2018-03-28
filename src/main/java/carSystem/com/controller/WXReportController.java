@@ -11,11 +11,9 @@ import carSystem.com.bean.report.baiRong.TelPeriod;
 import carSystem.com.bean.report.baiRong.TelStatus;
 import carSystem.com.bean.report.baiRong.strategy.Strategy;
 import carSystem.com.bean.report.jd.JdApi;
-import carSystem.com.service.CustomerService;
-import carSystem.com.service.ReportService;
-import carSystem.com.service.TableService;
-import carSystem.com.service.UserService;
+import carSystem.com.service.*;
 import carSystem.com.service.report.ApiService;
+import carSystem.com.utils.IdcardValidatorUtil;
 import carSystem.com.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,6 +39,9 @@ public class WXReportController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private IntegralService integralService;
+
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody
     Result newReport(@RequestBody CustomerVO customerVO, @RequestHeader("sid") String sid) {
@@ -59,39 +60,60 @@ public class WXReportController {
                 }
             }
 
-            Integer customerId = customerService.insert(customer);
-            Report report = new Report();
-            report.setName(customer.getName());
-            report.setNum(Report.generateCode(9));
-            report.setUserId(user.getId());
-            report.setCustomerId(customerId);
-            report.setServiceList(CustomerVO.listToString(serviceList));
-            Integer reportId = reportService.insert(report);
-
-            for (Integer id : serviceList) {
-                switch (id) {
-                    case 1:
-                        Strategy strategy = apiService.strategyApi(customer, reportId);
-                        break;
-                    case 2:
-                        BankFourPro bankFourPro = apiService.bankFourProApi(customer, reportId);
-                        break;
-                    case 3:
-                        TelChecks telChecks = apiService.telChecksApi(customer, reportId);
-                        break;
-                    case 4:
-                        TelPeriod telPeriod = apiService.telPeriodApi(customer, reportId);
-                        break;
-                    case 5:
-                        TelStatus telStatus = apiService.telStatusApi(customer, reportId);
-                        break;
-                    case 6:
-                        AliApi aliApi = apiService.aliApi(customer, reportId);
-                        JdApi jdApi = apiService.jdApi(customer, reportId);
-                        break;
-                }
+            if (! IdcardValidatorUtil.isValidatedAllIdcard(customer.getIdNum())) {
+                return Result.failed("身份证号码不合法");
             }
-            return Result.success(reportId);
+
+            Integer point = integralService.sumPoint(serviceList);
+            if (user.getIntegral() < point) {
+                return Result.failed("积分不足，请联系管理员充值");
+            } else {
+                Integer check = reportService.checkCustomerExists(customer);
+                if (check != -1) {
+                    return Result.success(check);
+                }
+
+                Integer integral = user.getIntegral();
+                //更新用户积分
+                user.setIntegral(integral - point);
+                userService.update(user);
+
+                Integer customerId = customerService.insert(customer);
+                Report report = new Report();
+                //记录消耗积分
+                report.setPayout(point);
+                report.setName(customer.getName());
+                report.setNum(Report.generateCode(9));
+                report.setUserId(user.getId());
+                report.setCustomerId(customerId);
+                report.setServiceList(CustomerVO.listToString(serviceList));
+                Integer reportId = reportService.insert(report);
+
+                for (Integer id : serviceList) {
+                    switch (id) {
+                        case 1:
+                            Strategy strategy = apiService.strategyApi(customer, reportId);
+                            break;
+                        case 2:
+                            BankFourPro bankFourPro = apiService.bankFourProApi(customer, reportId);
+                            break;
+                        case 3:
+                            TelChecks telChecks = apiService.telChecksApi(customer, reportId);
+                            break;
+                        case 4:
+                            TelPeriod telPeriod = apiService.telPeriodApi(customer, reportId);
+                            break;
+                        case 5:
+                            TelStatus telStatus = apiService.telStatusApi(customer, reportId);
+                            break;
+                        case 6:
+                            AliApi aliApi = apiService.aliApi(customer, reportId);
+                            JdApi jdApi = apiService.jdApi(customer, reportId);
+                            break;
+                    }
+                }
+                return Result.success(reportId);
+            }
         }
     }
 

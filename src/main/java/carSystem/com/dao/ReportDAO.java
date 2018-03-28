@@ -38,4 +38,8 @@ public class ReportDAO extends BaseDAO<Report> {
                 userId, start.toString("yyyy-MM-dd HH:mm:ss"), end.toString("yyyy-MM-dd HH:mm:ss"));
     }
 
+    public Report findByCustomerId(Integer customerId) {
+        return find(" customerId = ? ", customerId);
+    }
+
 }

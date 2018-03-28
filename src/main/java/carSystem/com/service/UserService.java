@@ -2,6 +2,7 @@ package carSystem.com.service;
 
 import carSystem.com.bean.User;
 import carSystem.com.dao.UserDAO;
+import carSystem.com.utils.SqlBuilder;
 import carSystem.com.vo.ListQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -61,25 +62,22 @@ public class UserService {
 
     //分页查找user
     public List<User> userQuery(ListQuery query) {
-        String sql = " 1=1 ";
-        String nameSql = "";
-        String orderBySql = " order by created_at desc ";
-        String limitSql = "";
+        SqlBuilder sql = new SqlBuilder();
+        sql.appendSql("1=1");
 
         if (StringUtils.isNotBlank(query.getName())) {
-            nameSql = " and nickName like '%" +query.getName() +"%' ";
-            sql = sql + nameSql;
+            sql.appendSql(" and nickName like ").appendValue("%"+query.getName()+"%");
         }
-
-        sql = sql + orderBySql;
+        String orderBySql = " order by created_at desc ";
+        sql.appendSql(orderBySql);
         Integer page = query.getPage();
         Integer limit = query.getLimit();
         if (page > 0 && limit > 0) {
             Integer start = (page - 1) * limit;
-            limitSql = " limit "+start.toString()+","+limit.toString();
-            sql = sql + limitSql;
+            sql.appendSql(" limit " + start.toString() + "," + limit.toString());
+
         }
 
-        return userDAO.findAll(sql);
+        return userDAO.findAll(sql.getSql(), sql.getValues());
     }
 }

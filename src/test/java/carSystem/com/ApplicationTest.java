@@ -5,10 +5,13 @@ import carSystem.com.bean.User;
 import carSystem.com.bean.report.baiRong.*;
 import carSystem.com.service.report.ApiService;
 import carSystem.com.utils.IdcardValidatorUtil;
+import carSystem.com.utils.SqlBuilder;
+import ch.qos.logback.classic.db.SQLBuilder;
 import com.bfd.facade.MerchantServer;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,12 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -154,45 +159,80 @@ public class ApplicationTest {
 
 	@Test
 	public void zz() {
-		String s = "查询成功_有数据,B";
-		Pattern p = Pattern.compile("^查询成功_有数据,");
-		Matcher m = p.matcher(s);
-		if (StringUtils.isNotBlank(s)) {
-			if (s.equals("查询成功_无数据")) {
-				s = "未命中";
+//		String s = "查询成功_有数据,B";
+//		Pattern p = Pattern.compile("^查询成功_有数据,");
+//		Matcher m = p.matcher(s);
+//		if (StringUtils.isNotBlank(s)) {
+//			if (s.equals("查询成功_无数据")) {
+//				s = "未命中";
+//
+//			} else if (m.find()) {
+//				String string = "命中：";
+//				Pattern A = Pattern.compile("[A]");
+//				Matcher a = A.matcher(s);
+//				Pattern B = Pattern.compile("[B]");
+//				Matcher b = B.matcher(s);
+//				Pattern C = Pattern.compile("[C]");
+//				Matcher c = C.matcher(s);
+//				Pattern D = Pattern.compile("[D]");
+//				Matcher d = D.matcher(s);
+//
+//				if (a.find()) {
+//					string = string + "在逃;";
+//				}
+//				if (b.find()) {
+//					string = string + "前科;";
+//				}
+//				if (c.find()) {
+//					string = string + "吸毒;";
+//				}
+//
+//				if (d.find()) {
+//					string = string + "涉毒;";
+//				}
+//				s = string;
+//			} else {
+//				s = "未命中";
+//			}
+//
+//		} else {
+//			s = "未验证";
+//		}
+//		System.out.println(s);
+	}
 
-			} else if (m.find()) {
-				String string = "命中：";
-				Pattern A = Pattern.compile("[A]");
-				Matcher a = A.matcher(s);
-				Pattern B = Pattern.compile("[B]");
-				Matcher b = B.matcher(s);
-				Pattern C = Pattern.compile("[C]");
-				Matcher c = C.matcher(s);
-				Pattern D = Pattern.compile("[D]");
-				Matcher d = D.matcher(s);
+	@Test
+	public void test() {
+		Customer newCustomer = new Customer();
+		newCustomer.setIdNum("123123123");
+		newCustomer.setBankId("银行卡");
+		newCustomer.setName("llh");
+		DateTime end = new DateTime();
+		DateTime start = end.minusDays(1);
 
-				if (a.find()) {
-					string = string + "在逃;";
-				}
-				if (b.find()) {
-					string = string + "前科;";
-				}
-				if (c.find()) {
-					string = string + "吸毒;";
-				}
+		SqlBuilder sqlBuilder = new SqlBuilder();
+		sqlBuilder.appendSql(" created_at between timestamp(" + end.toString("yyyy-MM-dd HH:mm:ss") +
+				") and timestamp(" + start.toString("yyyy-MM-dd HH:mm:ss") + ") ");
 
-				if (d.find()) {
-					string = string + "涉毒;";
-				}
-				s = string;
-			} else {
-				s = "未命中";
-			}
-
-		} else {
-			s = "未验证";
+		if (StringUtils.isNotBlank(newCustomer.getName())) {
+			sqlBuilder.appendSql(" and nickName = ");
+			sqlBuilder.appendValue(newCustomer.getName());
 		}
-		System.out.println(s);
+
+		if (StringUtils.isNotBlank(newCustomer.getCell())) {
+			sqlBuilder.appendSql(" and cell = ");
+			sqlBuilder.appendValue(newCustomer.getCell());
+		}
+
+		if (StringUtils.isNotBlank(newCustomer.getBankId())) {
+			sqlBuilder.appendSql(" and bankId = ");
+			sqlBuilder.appendValue(newCustomer.getBankId());
+		}
+
+		if (StringUtils.isNotBlank(newCustomer.getIdNum())) {
+			sqlBuilder.appendSql(" and idNum =  ");
+			sqlBuilder.appendValue(newCustomer.getIdNum());
+		}
+		System.out.println(sqlBuilder.getSql());
 	}
 }

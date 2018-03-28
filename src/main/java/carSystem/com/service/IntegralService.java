@@ -7,6 +7,7 @@ import carSystem.com.dao.AdminLogDAO;
 import carSystem.com.dao.GoodsDAO;
 import carSystem.com.dao.ReportDAO;
 import carSystem.com.dao.UserDAO;
+import carSystem.com.utils.SqlBuilder;
 import carSystem.com.vo.ListQuery;
 import carSystem.com.vo.UserTableVO;
 import org.joda.time.DateTime;
@@ -95,21 +96,19 @@ public class IntegralService {
 
     //分页查找log
     public List<AdminLog> logQuery(ListQuery query) {
-        String sql = " 1=1 ";
+        SqlBuilder sql = new SqlBuilder();
+        sql.appendSql("1=1");
         String orderBySql = " order by created_at desc ";
-        String limitSql = "";
-        sql = sql + orderBySql;
+        sql.appendSql(orderBySql);
 
         Integer page = query.getPage();
         Integer limit = query.getLimit();
         if (page > 0 && limit > 0) {
             Integer start = (page - 1) * limit;
-            limitSql = " limit "+start.toString()+","+limit.toString();
-            sql = sql + limitSql;
+            sql.appendSql(" limit " + start.toString() + "," + limit.toString());
         }
 
-
-        return adminLogDAO.findAll(sql);
+        return adminLogDAO.findAll(sql.getSql(), sql.getValues());
     }
 
 

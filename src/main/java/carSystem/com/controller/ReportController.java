@@ -71,6 +71,11 @@ public class ReportController {
         if (user.getIntegral() < point) {
             return Result.failed("积分不足，请联系管理员充值");
         } else {
+            Integer check = reportService.checkCustomerExists(customer);
+            if (check != -1) {
+                return Result.success(check);
+            }
+
             Integer integral = user.getIntegral();
             //更新用户积分
             user.setIntegral(integral - point);
@@ -166,6 +171,7 @@ public class ReportController {
         return Result.success(map);
     }
 
+    @Deprecated
     @LoginRequired(role = Role.ALL)
     @RequestMapping(method = RequestMethod.GET, value = "/detail/{reportId}")
     public @ResponseBody

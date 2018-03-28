@@ -21,6 +21,7 @@ import carSystem.com.service.report.baiRong.TelStatusService;
 import carSystem.com.service.report.baiRong.strategy.*;
 import carSystem.com.service.report.jd.JdService;
 import carSystem.com.utils.FileUtils;
+import carSystem.com.utils.SqlBuilder;
 import carSystem.com.vo.ListQuery;
 import carSystem.com.vo.ReportJson;
 import carSystem.com.vo.ReportVO;
@@ -29,14 +30,18 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class ReportService {
+
+    private static final Integer MinusDays = 1;
 
     @Autowired
     private ReportDAO reportDAO;
@@ -170,72 +175,56 @@ public class ReportService {
     }
 
     public List<Report> listQuery(User user, ListQuery query) {
-        String sql = " 1=1 ";
-
-        String nameSql = "";
-        String numSql = "";
-        String roleSql = "";
-        String channelSql = "";
-        String orderBySql = " order by created_at desc ";
-        String limitSql = "";
-
+        SqlBuilder sql = new SqlBuilder();
+        sql.appendSql("1=1");
 
         if (StringUtils.isNotBlank(query.getName())) {
-            nameSql = " and name like '%" +query.getName() +"%' ";
-            sql = sql + nameSql;
+            sql.appendSql(" and name like ").appendValue("%"+query.getName()+"%");
         }
 
         if (StringUtils.isNotBlank(query.getNum())) {
-            numSql = " and num like '%" + query.getNum() +"%' ";
-            sql = sql + numSql;
+            sql.appendSql(" and num like ").appendValue("%"+query.getNum()+"%");
         }
 
         if (user.getRole() != Role.ADMIN.getRole()) {
-            roleSql = " and userId = " + user.getId().toString();
-            sql = sql + roleSql;
+            sql.appendSql(" and userId = ").appendValue(user.getId());
         } else if (user.getRole() == Role.ADMIN.getRole() && query.getUserId() != null) {
-            channelSql = " and userId = " + query.getUserId();
-            sql = sql + channelSql;
+            sql.appendSql(" and userId = ").appendValue(query.getUserId());
         }
-        sql = sql + orderBySql;
+
+        String orderBySql = " order by created_at desc ";
+        sql.appendSql(orderBySql);
 
         Integer page = query.getPage();
         Integer limit = query.getLimit();
         if (page > 0 && limit > 0) {
             Integer start = (page - 1) * limit;
-            limitSql = " limit "+start.toString()+","+limit.toString();
-            sql = sql + limitSql;
+            sql.appendSql(" limit " + start.toString() + "," + limit.toString());
         }
 
-        return reportDAO.findAll(sql);
+        return reportDAO.findAll(sql.getSql(), sql.getValues());
     }
 
-    public Integer listQuerySize(User user, ListQuery query) {
-        String sql = " 1=1 ";
 
-        String nameSql = "";
-        String numSql = "";
-        String roleSql = "";
-        String channelSql = "";
+
+    public Integer listQuerySize(User user, ListQuery query) {
+        SqlBuilder sql = new SqlBuilder();
+        sql.appendSql("1=1");
 
         if (StringUtils.isNotBlank(query.getName())) {
-            nameSql = " and name like '%" +query.getName() +"%' ";
-            sql = sql + nameSql;
+            sql.appendSql(" and name like ").appendValue("%"+query.getName()+"%");
         }
 
         if (StringUtils.isNotBlank(query.getNum())) {
-            numSql = " and num like '%" + query.getNum() +"%' ";
-            sql = sql + numSql;
+            sql.appendSql(" and num like ").appendValue("%"+query.getNum()+"%");
         }
 
         if (user.getRole() != Role.ADMIN.getRole()) {
-            roleSql = " and userId = " + user.getId().toString();
-            sql = sql + roleSql;
+            sql.appendSql(" and userId = ").appendValue(user.getId());
         } else if (user.getRole() == Role.ADMIN.getRole() && query.getUserId() != null) {
-            channelSql = " and userId = " + query.getUserId();
-            sql = sql + channelSql;
+            sql.appendSql(" and userId = ").appendValue(query.getUserId());
         }
-        return reportDAO.count(sql);
+        return reportDAO.count(sql.getSql(), sql.getValues());
     }
 
     private JSONArray toJsonArray(JSONObject data, JSONObject document) {
@@ -254,4 +243,49 @@ public class ReportService {
     public Report findById(@NotNull Integer reportId) {
         return reportDAO.findById(reportId);
     }
+
+
+    //判断是否24小时内已查过，如有，返回旧报告id，如无返回-1
+    public Integer checkCustomerExists(Customer newCustomer) {
+        DateTime end = new DateTime();
+        DateTime start = end.minusDays(MinusDays);
+
+        SqlBuilder sqlBuilder = new SqlBuilder();
+        sqlBuilder.appendSql(" created_at between timestamp(").appendValue(start.toString("yyyy-MM-dd HH:mm:ss"))
+                .appendSql(") and timestamp(").appendValue(end.toString("yyyy-MM-dd HH:mm:ss")).appendSql(") ");
+
+        if (StringUtils.isNotBlank(newCustomer.getName())) {
+            sqlBuilder.appendSql(" and name = ");
+            sqlBuilder.appendValue(newCustomer.getName());
+        }
+
+        if (StringUtils.isNotBlank(newCustomer.getCell())) {
+            sqlBuilder.appendSql(" and cell = ");
+            sqlBuilder.appendValue(newCustomer.getCell());
+        }
+
+        if (StringUtils.isNotBlank(newCustomer.getBankId())) {
+            sqlBuilder.appendSql(" and bankId = ");
+            sqlBuilder.appendValue(newCustomer.getBankId());
+        }
+
+        if (StringUtils.isNotBlank(newCustomer.getIdNum())) {
+            sqlBuilder.appendSql(" and idNum =  ");
+            sqlBuilder.appendValue(newCustomer.getIdNum());
+        }
+
+        Customer customer = customerDAO.find(sqlBuilder.getSql(), sqlBuilder.getValues());
+
+        if (customer != null) {
+            Report oldReport = reportDAO.findByCustomerId(customer.getId());
+            if (oldReport != null) {
+                return oldReport.getId();
+            } else {
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+    }
+
 }

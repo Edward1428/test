@@ -158,7 +158,6 @@ public class AliService {
             JSONObject showapi_res_body = json.getJSONObject("showapi_res_body");
             Integer ret_code = showapi_res_body.getInteger("ret_code");
             if (ret_code == 0) {
-
                 cell.setFlag(1);
                 cell.setCity(showapi_res_body.getString("city"));
                 cell.setProv(showapi_res_body.getString("prov"));
