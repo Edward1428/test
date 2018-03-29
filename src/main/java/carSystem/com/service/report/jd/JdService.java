@@ -216,6 +216,7 @@ public class JdService {
                 blackNameDAO.insert(blackName);
             }
         } catch (Exception e) {
+            blackNameDAO.insert(blackName);
             e.printStackTrace();
         }
         return blackName;
