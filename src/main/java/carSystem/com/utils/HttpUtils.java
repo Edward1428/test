@@ -90,7 +90,7 @@ public class HttpUtils {
             try {
                 StatusLine statusLine = response.getStatusLine();
                 HttpEntity entity = response.getEntity();
-                if (statusLine.getStatusCode() >= 300) {
+                if (statusLine.getStatusCode() >= 300 && statusLine.getStatusCode() != 555) {
                     throw new HttpResponseException( statusLine.getStatusCode(), statusLine.getReasonPhrase());
                 } else if (entity == null) {
                     throw new ClientProtocolException("Response contains no content");
