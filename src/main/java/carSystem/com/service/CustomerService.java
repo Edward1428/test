@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomerService {
 
@@ -32,5 +34,9 @@ public class CustomerService {
         Report report = reportDAO.findById(reportId);
         Customer customer = findById(report.getCustomerId());
         return customer;
+    }
+
+    public List<Customer> findAllByUserId(Integer userId) {
+        return customerDAO.findAllByUserId(userId);
     }
 }

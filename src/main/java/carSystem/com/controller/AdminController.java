@@ -1,11 +1,13 @@
 package carSystem.com.controller;
 
 import carSystem.com.annotation.LoginRequired;
+import carSystem.com.bean.Customer;
 import carSystem.com.bean.Report;
 import carSystem.com.bean.Role;
 import carSystem.com.bean.User;
 import carSystem.com.bean.report.AdminLog;
 import carSystem.com.dao.AdminLogDAO;
+import carSystem.com.service.CustomerService;
 import carSystem.com.service.IntegralService;
 import carSystem.com.service.ReportService;
 import carSystem.com.service.UserService;
@@ -38,6 +40,9 @@ public class AdminController {
 
     @Autowired
     private AdminLogDAO adminLogDAO;
+
+    @Autowired
+    private CustomerService customerService;
 
     @LoginRequired(role = Role.ADMIN)
     @RequestMapping(method = RequestMethod.PUT, value = "/user")
@@ -183,5 +188,13 @@ public class AdminController {
         } else {
             return Result.failed("找不到这个报告");
         }
+    }
+
+    //用于前端导出，返回所有customer
+    @LoginRequired(role = Role.ADMIN)
+    @RequestMapping(method = RequestMethod.GET, value = "/customer/{userId}")
+    public @ResponseBody Result reportExcel(@PathVariable Integer userId) {
+        List<Customer> customerList = customerService.findAllByUserId(userId);
+        return Result.success(customerList);
     }
 }
