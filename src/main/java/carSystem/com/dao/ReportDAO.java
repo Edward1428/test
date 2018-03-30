@@ -15,26 +15,26 @@ public class ReportDAO extends BaseDAO<Report> {
     private QueryHelper queryHelper;
 
     public List<Report> findAllByUserId(Integer userId) {
-        return findAll("userId = ?", userId);
+        return findAll("userId = ? and status = 0 ", userId);
     }
 
 
     public long sumAllPayoutByUserId(Integer userId) {
-        return queryHelper.stateLong(" select sum(payout) from report where userId = ? ", userId);
+        return queryHelper.stateLong(" select sum(payout) from report where userId = ? and status = 0 ", userId);
     }
 
     public long sumPayOutByUserId(Integer userId, DateTime start, DateTime end) {
         return queryHelper.stateLong( " select sum(payout) from report where userId = ? " +
-                " and created_at between timestamp(?) and timestamp(?) ",
+                " and created_at between timestamp(?) and timestamp(?) and status = 0 ",
                 userId, start.toString("yyyy-MM-dd HH:mm:ss"), end.toString("yyyy-MM-dd HH:mm:ss"));
     }
 
     public Integer countALlByUserId(Integer userId) {
-        return count(" userId = ? ", userId);
+        return count(" userId = ? and status = 0 ", userId);
     }
 
     public Integer countByUserId(Integer userId, DateTime start, DateTime end) {
-        return count(" userId = ? and created_at between timestamp(?) and timestamp(?) ",
+        return count(" userId = ? and created_at between timestamp(?) and timestamp(?) and status = 0 ",
                 userId, start.toString("yyyy-MM-dd HH:mm:ss"), end.toString("yyyy-MM-dd HH:mm:ss"));
     }
 

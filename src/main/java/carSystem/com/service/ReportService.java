@@ -192,6 +192,9 @@ public class ReportService {
             sql.appendSql(" and userId = ").appendValue(query.getUserId());
         }
 
+        String statusSql = " and status = 0 ";
+        sql.appendSql(statusSql);
+
         String orderBySql = " order by created_at desc ";
         sql.appendSql(orderBySql);
 
@@ -224,6 +227,10 @@ public class ReportService {
         } else if (user.getRole() == Role.ADMIN.getRole() && query.getUserId() != null) {
             sql.appendSql(" and userId = ").appendValue(query.getUserId());
         }
+
+        String statusSql = " and status = 0 ";
+        sql.appendSql(statusSql);
+
         return reportDAO.count(sql.getSql(), sql.getValues());
     }
 
@@ -274,6 +281,9 @@ public class ReportService {
             sqlBuilder.appendValue(newCustomer.getIdNum());
         }
 
+        String statusSql = " and status = 0 ";
+        sqlBuilder.appendSql(statusSql);
+
         Customer customer = customerDAO.find(sqlBuilder.getSql(), sqlBuilder.getValues());
 
         if (customer != null) {
@@ -286,6 +296,10 @@ public class ReportService {
         } else {
             return -1;
         }
+    }
+
+    public boolean update(Report report) {
+        return reportDAO.update(report);
     }
 
 }

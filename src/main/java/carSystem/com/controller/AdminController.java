@@ -1,10 +1,13 @@
 package carSystem.com.controller;
 
 import carSystem.com.annotation.LoginRequired;
+import carSystem.com.bean.Report;
 import carSystem.com.bean.Role;
 import carSystem.com.bean.User;
 import carSystem.com.bean.report.AdminLog;
+import carSystem.com.dao.AdminLogDAO;
 import carSystem.com.service.IntegralService;
+import carSystem.com.service.ReportService;
 import carSystem.com.service.UserService;
 import carSystem.com.vo.ListQuery;
 import carSystem.com.vo.Result;
@@ -29,6 +32,12 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ReportService reportService;
+
+    @Autowired
+    private AdminLogDAO adminLogDAO;
 
     @LoginRequired(role = Role.ADMIN)
     @RequestMapping(method = RequestMethod.PUT, value = "/user")
@@ -152,5 +161,27 @@ public class AdminController {
         map.put("list", adminLogList);
         map.put("total", total);
         return Result.success(map);
+    }
+
+    @LoginRequired(role = Role.ADMIN)
+    @RequestMapping(method = RequestMethod.DELETE, value = "/report/{reportId}")
+    public @ResponseBody
+    Result delete(@RequestAttribute User user, @PathVariable Integer reportId) {
+        Report report = reportService.findById(reportId);
+        if (report != null) {
+            report.setStatus(Report.DisAble);
+            reportService.update(report);
+
+            AdminLog adminLog = new AdminLog();
+            adminLog.setAdminId(user.getId());
+            adminLog.setAdminName(user.getNickName());
+            adminLog.setUserId(report.getUserId());
+            adminLog.setUserName(userService.findById(report.getUserId()).getNickName());
+            adminLog.setMsg("删除报告"+report.getName()+ ",如有需要，请手动返回积分:"+ report.getPayout() +"分");
+            adminLogDAO.insert(adminLog);
+            return Result.success();
+        } else {
+            return Result.failed("找不到这个报告");
+        }
     }
 }

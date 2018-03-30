@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Random;
 
 public class Report extends BaseBean {
+    public static final short Able = 0;
+    public static final short DisAble = -1;
+
     private String num;
     private String name;
     private Integer userId;

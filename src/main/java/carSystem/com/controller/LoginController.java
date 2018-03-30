@@ -32,6 +32,18 @@ public class LoginController {
         return Result.success(user);
     }
 
+    @LoginRequired
+    @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
+    public @ResponseBody Result getUserInfo(@RequestAttribute User user) {
+        if (user != null) {
+            return Result.success();
+        } else {
+            return Result.failed("请登陆");
+        }
+
+    }
+
+
     //登录
     @RequestMapping(value = "/user/login", method = RequestMethod.PUT)
     public @ResponseBody Result userLogin(@RequestBody JSONObject authorized, HttpServletResponse response) {

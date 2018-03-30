@@ -53,6 +53,7 @@ public class ReportController {
     public @ResponseBody
     Result newReport(@RequestBody CustomerVO customerVO, @RequestAttribute User user) {
         Customer customer = customerVO.getCustomer();
+        customer.setName(customer.getName().trim());
         List<Integer> serviceList = customerVO.getServiceList();
         if (serviceList.isEmpty()) {
             return Result.failed("至少需要选择一种服务");

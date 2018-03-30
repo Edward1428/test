@@ -50,6 +50,7 @@ public class WXReportController {
             return Result.failed("请登陆");
         } else {
             Customer customer = customerVO.getCustomer();
+            customer.setName(customer.getName().trim());
             List<Integer> serviceList = customerVO.getServiceList();
             if (serviceList.isEmpty()) {
                 return Result.failed("至少需要选择一种服务");
