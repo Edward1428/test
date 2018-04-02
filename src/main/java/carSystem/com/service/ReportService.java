@@ -4,6 +4,7 @@ import carSystem.com.bean.Customer;
 import carSystem.com.bean.Report;
 import carSystem.com.bean.Role;
 import carSystem.com.bean.User;
+import carSystem.com.bean.report.SelfBlackName;
 import carSystem.com.bean.report.ali.*;
 import carSystem.com.bean.report.baiRong.BankFourPro;
 import carSystem.com.bean.report.baiRong.TelChecks;
@@ -13,6 +14,8 @@ import carSystem.com.bean.report.baiRong.strategy.*;
 import carSystem.com.bean.report.jd.*;
 import carSystem.com.dao.CustomerDAO;
 import carSystem.com.dao.ReportDAO;
+import carSystem.com.dao.report.SelfBlackNameDAO;
+import carSystem.com.dao.report.jd.BlackNameListDAO;
 import carSystem.com.dbmanager.QueryHelper;
 import carSystem.com.service.report.ali.AliService;
 import carSystem.com.service.report.baiRong.BankFourProService;
@@ -88,6 +91,9 @@ public class ReportService {
 
     @Autowired
     private QueryHelper queryHelper;
+
+
+
 
     public Integer insert(@NotNull Report report) {
         return reportDAO.insert(report);

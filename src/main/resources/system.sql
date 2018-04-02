@@ -978,3 +978,14 @@ CREATE TABLE carshield(
   message VARCHAR(24)  DEFAULT '',
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET =utf8 COMMENT = '京东多维度租车黑名单';
+
+CREATE TABLE selfblackname(
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '编号',
+  name VARCHAR(24)  DEFAULT '',
+  idNum VARCHAR(24)  DEFAULT '',
+  cell VARCHAR(24)  DEFAULT '',
+  reason VARCHAR(128)  DEFAULT '原因',
+  degree VARCHAR(24) DEFAULT '程度',
+  company VARCHAR(24) DEFAULT '公司',
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET =utf8 COMMENT = '自建黑名单';

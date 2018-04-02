@@ -32,8 +32,6 @@ public class QueryHelper {
             return jdbcTemplate.queryForObject(sql + " limit 1 ", params,
                     new BeanPropertyRowMapper<T>(type));
         } catch (DataAccessException e) {
-            logger.info(e.toString());
-            e.printStackTrace();
             return null;
         }
     }

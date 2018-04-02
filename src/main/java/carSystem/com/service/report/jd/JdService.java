@@ -1,13 +1,16 @@
 package carSystem.com.service.report.jd;
 
 import carSystem.com.bean.Customer;
+import carSystem.com.bean.report.SelfBlackName;
 import carSystem.com.bean.report.jd.*;
+import carSystem.com.dao.report.SelfBlackNameDAO;
 import carSystem.com.dao.report.jd.*;
 import carSystem.com.utils.HttpUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,9 @@ public class JdService {
 
     @Autowired
     private CarshieldDAO carshieldDAO;
+
+    @Autowired
+    private SelfBlackNameDAO selfBlackNameDAO;
 
     private static final String JDAppKey = "96a7b3b4812e581a287fc77834a6c159";
 
@@ -176,6 +182,7 @@ public class JdService {
                         blackName.setBlackType5(typeToString(totalCounts.getJSONObject(4).getString("blackType")));
                         blackName.setBlackCount5(countToString(totalCounts.getJSONObject(4).getInteger("blackCount").toString()));
                         Integer blackNameId = blackNameDAO.insert(blackName);
+                        insertSelfBlackName(blackNameId, customer.getIdNum());
                         JSONArray list = data.getJSONArray("list");
                         Integer i = list.size();
                         for (int a = 0; a < i; a++) {
@@ -208,15 +215,18 @@ public class JdService {
                     blackName.setBlackType5(typeToString("E"));
                     blackName.setBlackCount5(countToString("0"));
                     blackName.setMsg(result.getString("msg"));
-                    blackNameDAO.insert(blackName);
+                    Integer blackNameId = blackNameDAO.insert(blackName);
+                    insertSelfBlackName(blackNameId, customer.getIdNum());
                 }
             } else {
                 blackName.setFlag(-1);
                 blackName.setMsg(json.getString("msg"));
-                blackNameDAO.insert(blackName);
+                Integer blackNameId = blackNameDAO.insert(blackName);
+                insertSelfBlackName(blackNameId, customer.getIdNum());
             }
         } catch (Exception e) {
-            blackNameDAO.insert(blackName);
+            Integer blackNameId = blackNameDAO.insert(blackName);
+            insertSelfBlackName(blackNameId, customer.getIdNum());
             e.printStackTrace();
         }
         return blackName;
@@ -388,5 +398,20 @@ public class JdService {
 
     public Carshield findCarshield(Integer reportId) {
         return carshieldDAO.find("reportId = ?", reportId);
+    }
+
+
+    public void insertSelfBlackName(@NotNull Integer blackNameId, @NotNull String idNum) {
+        List<SelfBlackName> selfBlackNameList = selfBlackNameDAO.findByIdNum(idNum);
+        if (selfBlackNameList.size() > 0) {
+            for (SelfBlackName selfBlackName : selfBlackNameList) {
+                BlackNameList blackNameList = new BlackNameList();
+                blackNameList.setBlackNameId(blackNameId);
+                blackNameList.setBlackRiskType("黑名单");
+                blackNameList.setBlackFactsType(selfBlackName.getDegree());
+                blackNameList.setBlackFacts(selfBlackName.getReason());
+                blackNameListDAO.insert(blackNameList);
+            }
+        }
     }
 }

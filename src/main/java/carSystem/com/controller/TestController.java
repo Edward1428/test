@@ -2,29 +2,29 @@ package carSystem.com.controller;
 
 import carSystem.com.bean.Customer;
 import carSystem.com.bean.User;
+import carSystem.com.bean.report.SelfBlackName;
 import carSystem.com.bean.report.baiRong.*;
-import carSystem.com.bean.report.baiRong.strategy.ApplyLoan;
-import carSystem.com.bean.report.baiRong.strategy.Execution;
-import carSystem.com.bean.report.baiRong.strategy.SpecialList;
 import carSystem.com.bean.report.baiRong.strategy.Strategy;
+import carSystem.com.dao.report.SelfBlackNameDAO;
 import carSystem.com.service.report.ApiService;
 import carSystem.com.service.report.baiRong.BankFourProService;
 import carSystem.com.service.report.baiRong.TelChecksService;
 import carSystem.com.service.report.baiRong.TelPeriodService;
 import carSystem.com.service.report.baiRong.TelStatusService;
-import carSystem.com.service.report.baiRong.strategy.ApplyLoanService;
-import carSystem.com.service.report.baiRong.strategy.ExecutionService;
-import carSystem.com.service.report.baiRong.strategy.SpecialListService;
 import carSystem.com.service.report.baiRong.strategy.StrategyService;
+import carSystem.com.utils.FileUtils;
 import carSystem.com.vo.ReportVO;
 import carSystem.com.vo.Result;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Controller
 public class TestController {
@@ -46,6 +46,9 @@ public class TestController {
 
     @Autowired
     private TelStatusService telStatusService;
+
+    @Autowired
+    private SelfBlackNameDAO selfBlackNameDAO;
 
     @RequestMapping(value = "/bbb/aaa", method = RequestMethod.GET)
     public @ResponseBody
@@ -113,5 +116,15 @@ public class TestController {
     public @ResponseBody
     Result getPassword(@RequestParam String password) {
         return Result.success(User.sha512EncodePassword(password));
+    }
+
+    @RequestMapping(value = "/excel", method = RequestMethod.GET)
+    public @ResponseBody
+    Result setExcel() {
+        String file = FileUtils.readResource("/document/selfBlackName.md");
+        JSONArray jsonArray = JSON.parseArray(file);
+        List<SelfBlackName> selfblackNameList = jsonArray.toJavaList(SelfBlackName.class);
+        selfBlackNameDAO.batchInsert(selfblackNameList);
+        return Result.success(selfblackNameList);
     }
 }
