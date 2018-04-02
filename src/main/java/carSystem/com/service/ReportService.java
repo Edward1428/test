@@ -13,6 +13,7 @@ import carSystem.com.bean.report.baiRong.strategy.*;
 import carSystem.com.bean.report.jd.*;
 import carSystem.com.dao.CustomerDAO;
 import carSystem.com.dao.ReportDAO;
+import carSystem.com.dbmanager.QueryHelper;
 import carSystem.com.service.report.ali.AliService;
 import carSystem.com.service.report.baiRong.BankFourProService;
 import carSystem.com.service.report.baiRong.TelChecksService;
@@ -84,6 +85,9 @@ public class ReportService {
 
     @Autowired
     private JdService jdService;
+
+    @Autowired
+    private QueryHelper queryHelper;
 
     public Integer insert(@NotNull Report report) {
         return reportDAO.insert(report);
@@ -258,11 +262,13 @@ public class ReportService {
         DateTime start = end.minusDays(MinusDays);
 
         SqlBuilder sqlBuilder = new SqlBuilder();
-        sqlBuilder.appendSql(" created_at between timestamp(").appendValue(start.toString("yyyy-MM-dd HH:mm:ss"))
+        sqlBuilder.appendSql(" select customer.* from customer, report where ");
+
+        sqlBuilder.appendSql(" report.created_at between timestamp(").appendValue(start.toString("yyyy-MM-dd HH:mm:ss"))
                 .appendSql(") and timestamp(").appendValue(end.toString("yyyy-MM-dd HH:mm:ss")).appendSql(") ");
 
         if (StringUtils.isNotBlank(newCustomer.getName())) {
-            sqlBuilder.appendSql(" and name = ");
+            sqlBuilder.appendSql(" and customer.name = ");
             sqlBuilder.appendValue(newCustomer.getName());
         }
 
@@ -284,7 +290,7 @@ public class ReportService {
         String statusSql = " and status = 0 ";
         sqlBuilder.appendSql(statusSql);
 
-        Customer customer = customerDAO.find(sqlBuilder.getSql(), sqlBuilder.getValues());
+        Customer customer = queryHelper.query(Customer.class, sqlBuilder.getSql(), sqlBuilder.getValues());
 
         if (customer != null) {
             Report oldReport = reportDAO.findByCustomerId(customer.getId());
