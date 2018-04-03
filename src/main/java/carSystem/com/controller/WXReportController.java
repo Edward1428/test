@@ -69,7 +69,7 @@ public class WXReportController {
             if (user.getIntegral() < point) {
                 return Result.failed("积分不足，请联系管理员充值");
             } else {
-                Integer check = reportService.checkCustomerExists(customer);
+                Integer check = reportService.checkCustomerExists(user.getId(), customer);
                 if (check != -1) {
                     return Result.success(check);
                 }

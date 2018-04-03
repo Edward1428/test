@@ -263,14 +263,14 @@ public class ReportService {
 
 
     //判断是否24小时内已查过，如有，返回旧报告id，如无返回-1
-    public Integer checkCustomerExists(Customer newCustomer) {
+    public Integer checkCustomerExists(Integer UserId, Customer newCustomer) {
         DateTime end = new DateTime();
         DateTime start = end.minusDays(MinusDays);
 
         SqlBuilder sqlBuilder = new SqlBuilder();
-        sqlBuilder.appendSql(" select customer.* from customer, report where ");
+        sqlBuilder.appendSql(" select customer.* from customer, report where report.userId = ? ").appendValue(UserId);
 
-        sqlBuilder.appendSql(" report.created_at between timestamp(").appendValue(start.toString("yyyy-MM-dd HH:mm:ss"))
+        sqlBuilder.appendSql(" and report.created_at between timestamp(").appendValue(start.toString("yyyy-MM-dd HH:mm:ss"))
                 .appendSql(") and timestamp(").appendValue(end.toString("yyyy-MM-dd HH:mm:ss")).appendSql(") ");
 
         if (StringUtils.isNotBlank(newCustomer.getName())) {
@@ -279,21 +279,21 @@ public class ReportService {
         }
 
         if (StringUtils.isNotBlank(newCustomer.getCell())) {
-            sqlBuilder.appendSql(" and cell = ");
+            sqlBuilder.appendSql(" and customer.cell = ");
             sqlBuilder.appendValue(newCustomer.getCell());
         }
 
         if (StringUtils.isNotBlank(newCustomer.getBankId())) {
-            sqlBuilder.appendSql(" and bankId = ");
+            sqlBuilder.appendSql(" and customer.bankId = ");
             sqlBuilder.appendValue(newCustomer.getBankId());
         }
 
         if (StringUtils.isNotBlank(newCustomer.getIdNum())) {
-            sqlBuilder.appendSql(" and idNum =  ");
+            sqlBuilder.appendSql(" and customer.idNum =  ");
             sqlBuilder.appendValue(newCustomer.getIdNum());
         }
 
-        String statusSql = " and status = 0 ";
+        String statusSql = " and report.status = 0 ";
         sqlBuilder.appendSql(statusSql);
 
         Customer customer = queryHelper.query(Customer.class, sqlBuilder.getSql(), sqlBuilder.getValues());
