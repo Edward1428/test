@@ -186,7 +186,19 @@ public class ReportController {
     @LoginRequired(role = Role.ALL)
     @RequestMapping(method = RequestMethod.GET, value = "/countByDay")
     public @ResponseBody
-    Result countAllReportByDay(@RequestAttribute User user) {
-        return Result.success(reportService.countDayReportByUserId(user.getId()));
+    Result countAllReportByDay(@RequestAttribute User user, @RequestParam String start, @RequestParam String end) {
+        if (user.getRole() == Role.ADMIN.getRole()) {
+            List<User> userList = userService.findAll();
+            HashMap<String, Object> map = new HashMap<>();
+            for (User u : userList) {
+                List<ReportDayCount> reportDayCountList = reportService.countDayReportByUserId(u.getId(), start, end);
+                map.put(u.getNickName(), reportDayCountList);
+            }
+            return Result.success(map);
+        } else {
+            return Result.success(reportService.countDayReportByUserId(user.getId(),start, end));
+        }
+
     }
+
 }

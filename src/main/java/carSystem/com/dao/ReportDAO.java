@@ -43,9 +43,10 @@ public class ReportDAO extends BaseDAO<Report> {
         return find(" customerId = ? ", customerId);
     }
 
-    public List<ReportDayCount> countDayReportByUserId(Integer userId) {
+    public List<ReportDayCount> countDayReportByUserId(Integer userId, String start, String end) {
         return queryHelper.queryAll(ReportDayCount.class, " select DATE_FORMAT(created_at,'%Y-%m-%d') as days, sum(payout) as sum, count(1) "
-                + " count from report where userId = ? and status = 0 group by days ", userId);
+                + " count from report where userId = ? and status = 0 and created_at between timestamp(?) and timestamp(?) group by days "
+                , userId, start, end);
     }
 
 }

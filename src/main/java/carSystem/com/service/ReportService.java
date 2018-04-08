@@ -317,8 +317,8 @@ public class ReportService {
 
 
     //根据用户id，查找每日报告量
-    public List<ReportDayCount> countDayReportByUserId(Integer userId) {
-        return reportDAO.countDayReportByUserId(userId);
+    public List<ReportDayCount> countDayReportByUserId(Integer userId, String start, String end) {
+        return reportDAO.countDayReportByUserId(userId, start, end);
     }
 
 }
