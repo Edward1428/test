@@ -101,6 +101,7 @@ public class XinShuService {
         if (rc.equals("0000")) {
             JSONObject data = jsonObject.getJSONObject("data");
             idCard.setMessage(data.getString("message"));
+            idCard.setIdCardPhoto(data.getString("idCardPhoto"));
             idCard.setFlag(1);
         } else {
             idCard.setFlag(-1);
@@ -129,7 +130,7 @@ public class XinShuService {
 
     private void bankCheck(Customer customer, Integer reportId) {
         String url = "http://123.59.76.144/ws/personAuth/unionPay34Element";
-        String s = url+"?apikey="+apikey+"&sign="+generatedSign(sign)+"&name"+customer.getName()+"&idCard="+customer.getIdNum()
+        String s = url+"?apikey="+apikey+"&sign="+generatedSign(sign)+"&name="+customer.getName()+"&idCard="+customer.getIdNum()
                 + "&accountNO="+customer.getBankId()+"&bankPreMobile="+customer.getCell();
         BankCard bankCard = new BankCard();
         bankCard.setReportId(reportId);
