@@ -61,7 +61,7 @@ public class WXReportController {
                 }
             }
 
-            if (! IdcardValidatorUtil.isValidatedAllIdcard(customer.getIdNum())) {
+            if (!IdcardValidatorUtil.isValidatedAllIdcard(customer.getIdNum())) {
                 return Result.failed("身份证号码不合法");
             }
 
@@ -152,7 +152,7 @@ public class WXReportController {
             if (listQuery == null) {
                 if (user.getRole() == Role.ADMIN.getRole()) {
                     reportList = reportService.findAll();
-                } else if (user.getRole() == Role.CHANNEL.getRole()){
+                } else if (user.getRole() == Role.CHANNEL.getRole()) {
                     reportList = reportService.findAllByUserId(user.getId());
                 }
                 total = reportList.size();
@@ -178,5 +178,12 @@ public class WXReportController {
         }
 
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/countByDay")
+    public @ResponseBody Result countAllReportByDay(@RequestHeader("sid") String sid) {
+        User user = userService.findSid(sid);
+        return Result.success(reportService.countDayReportByUserId(user.getId()));
+    }
+
 
 }

@@ -64,7 +64,7 @@ public class ReportController {
             }
         }
 
-        if (! IdcardValidatorUtil.isValidatedAllIdcard(customer.getIdNum())) {
+        if (!IdcardValidatorUtil.isValidatedAllIdcard(customer.getIdNum())) {
             return Result.failed("身份证号码不合法");
         }
 
@@ -111,8 +111,9 @@ public class ReportController {
                         TelStatus telStatus = apiService.telStatusApi(customer, reportId);
                         break;
                     case 6:
-                        AliApi aliApi = apiService.aliApi(customer, reportId);
-                        JdApi jdApi = apiService.jdApi(customer, reportId);
+//                        AliApi aliApi = apiService.aliApi(customer, reportId);
+//                        JdApi jdApi = apiService.jdApi(customer, reportId);
+                        apiService.xinShuApi(customer, reportId);
                         break;
                 }
             }
@@ -147,7 +148,7 @@ public class ReportController {
         if (listQuery == null) {
             if (user.getRole() == Role.ADMIN.getRole()) {
                 reportList = reportService.findAll();
-            } else if (user.getRole() == Role.CHANNEL.getRole()){
+            } else if (user.getRole() == Role.CHANNEL.getRole()) {
                 reportList = reportService.findAllByUserId(user.getId());
             }
             total = reportList.size();
@@ -182,4 +183,10 @@ public class ReportController {
         return Result.success(reportJson);
     }
 
+    @LoginRequired(role = Role.ALL)
+    @RequestMapping(method = RequestMethod.GET, value = "/countByDay")
+    public @ResponseBody
+    Result countAllReportByDay(@RequestAttribute User user) {
+        return Result.success(reportService.countDayReportByUserId(user.getId()));
+    }
 }

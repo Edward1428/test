@@ -146,7 +146,7 @@ public class AliService {
         return cellCheck;
     }
 
-    private Cell cellApi (Customer customer, Integer reportId) {
+    public Cell cellApi (Customer customer, Integer reportId) {
         String host = "http://showphone.market.alicloudapi.com";
         String path = "/6-1";
         String url = host + path + "?num=" + customer.getCell();

@@ -232,7 +232,7 @@ public class JdService {
         return blackName;
     }
 
-    private Carshield carshieldApi(Customer customer, Integer reportId) {
+    public Carshield carshieldApi(Customer customer, Integer reportId) {
         String host = "https://way.jd.com";
         String path = "/Carshield/Blacklist";
 
@@ -293,7 +293,7 @@ public class JdService {
         return carshield;
     }
 
-    private String typeToString(String s) {
+    public String typeToString(String s) {
         switch (s) {
             case "A": s ="严重违法"; break;
             case "B": s = "信贷逾期"; break;
@@ -320,7 +320,7 @@ public class JdService {
         return s;
     }
 
-    private String countToString(String count) {
+    public String countToString(String count) {
         String s = "";
         if (StringUtils.isNotBlank(count)) {
 

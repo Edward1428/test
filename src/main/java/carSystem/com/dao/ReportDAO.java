@@ -2,6 +2,7 @@ package carSystem.com.dao;
 
 import carSystem.com.bean.Report;
 import carSystem.com.dbmanager.QueryHelper;
+import carSystem.com.vo.ReportDayCount;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -40,6 +41,11 @@ public class ReportDAO extends BaseDAO<Report> {
 
     public Report findByCustomerId(Integer customerId) {
         return find(" customerId = ? ", customerId);
+    }
+
+    public List<ReportDayCount> countDayReportByUserId(Integer userId) {
+        return queryHelper.queryAll(ReportDayCount.class, " select DATE_FORMAT(created_at,'%Y-%m-%d') as days, sum(payout) as sum, count(1) "
+                + " count from report where userId = ? and status = 0 group by days ", userId);
     }
 
 }

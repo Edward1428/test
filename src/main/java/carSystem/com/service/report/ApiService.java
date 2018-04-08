@@ -9,6 +9,7 @@ import carSystem.com.service.report.ali.AliService;
 import carSystem.com.service.report.baiRong.*;
 import carSystem.com.service.report.baiRong.strategy.StrategyService;
 import carSystem.com.service.report.jd.JdService;
+import carSystem.com.service.report.xinshu.XinShuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,9 @@ public class ApiService implements ApiInterface{
 
     @Autowired
     private JdService jdService;
+
+    @Autowired
+    private XinShuService xinShuService;
 
     //银行卡四要素验证
     @Override
@@ -76,5 +80,10 @@ public class ApiService implements ApiInterface{
     @Override
     public JdApi jdApi(Customer customer, Integer reportId) {
         return jdService.jdApi(customer, reportId);
+    }
+
+    //信数接口
+    public void xinShuApi(Customer customer, Integer reportId) {
+        xinShuService.xinShuApi(customer, reportId);
     }
 }

@@ -10,6 +10,7 @@ public class BlackNameList extends BaseBean {
     private String blackHappenDate;
     private String blackAmt;
     private String blackPublishSource;
+    private String blackCount;
 
     public Integer getBlackNameId() {
         return blackNameId;
@@ -65,5 +66,13 @@ public class BlackNameList extends BaseBean {
 
     public void setBlackPublishSource(String blackPublishSource) {
         this.blackPublishSource = blackPublishSource;
+    }
+
+    public String getBlackCount() {
+        return blackCount;
+    }
+
+    public void setBlackCount(String blackCount) {
+        this.blackCount = blackCount;
     }
 }

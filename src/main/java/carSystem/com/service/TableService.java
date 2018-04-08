@@ -760,9 +760,9 @@ public class TableService {
 
     private String stringToMsg(String s) {
         if (StringUtils.isNotBlank(s)) {
-            if (s.equals("有效身份证") || s.equals("认证成功") || s.equals("验证成功") || s.equals("无该手机号记录")) {
+            if (s.equals("有效身份证") || s.equals("认证成功") || s.equals("验证成功") || s.equals("无该手机号记录") || s.equals("一致")) {
                 s = "一致";
-            } else if (s.equals("无效身份证")) {
+            } else if (s.equals("无效身份证") || s.equals("库中无此号，其它错误信息")) {
                 s = "无效身份证";
             } else {
                 s = "不一致";

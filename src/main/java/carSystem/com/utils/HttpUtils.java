@@ -80,6 +80,38 @@ public class HttpUtils {
         return null;
     }
 
+    public static String httpPost(final String url, Charset charset) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+        charset = charset != null ? charset : DEF_CONTENT_CHARSET;
+        try {
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            try {
+                StatusLine statusLine = response.getStatusLine();
+                HttpEntity entity = response.getEntity();
+                if (statusLine.getStatusCode() >= 300) {
+                    throw new HttpResponseException( statusLine.getStatusCode(), statusLine.getReasonPhrase());
+                } else if (entity == null) {
+                    throw new ClientProtocolException("Response contains no content");
+                } else {
+                    long len = entity.getContentLength();
+                    if (len != -1 && len < 2048) {
+                        return EntityUtils.toString(entity, charset);
+                    } else if (len > 2048) {
+                        return getContent(entity, charset);
+                    } else {
+                        return getContent(entity, charset);
+                    }
+                }
+            } finally {
+                response.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static String httpGetSetHeader(final String url, Charset charset, String headerKey, String headerValue) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
@@ -163,6 +195,8 @@ public class HttpUtils {
 
 
 
+
+
     public static String getContent(HttpEntity entity, Charset charset) {
         try {
             InputStream instream = entity.getContent();
@@ -191,6 +225,11 @@ public class HttpUtils {
         return check(content, url);
     }
 
+    public static JSONObject httpPostJsonObj(final String url) {
+        String content = httpPost(url, Consts.UTF_8);
+        return checkPost(content, url);
+    }
+
     public static JSONObject httpGetHeaderJsonObj(final String url, String headerKey, String headerValue) {
         String content = httpGetSetHeader(url, Consts.UTF_8, headerKey, headerValue);
         return check(content, url);
@@ -205,6 +244,24 @@ public class HttpUtils {
                 i++;
                 if (content == null) {
                     content = httpGet(url, Consts.UTF_8);
+                }
+            }
+            if (content == null) {
+                logger.error("请求失败，URL:"+url+"；已失败"+TRY_TIME+"次");
+            }
+            return JSON.parseObject(content);
+        }
+    }
+
+    private static JSONObject checkPost(String content, String url) {
+        if (content != null) {
+            return JSON.parseObject(content);
+        } else {
+            int i = 1;
+            while (i < TRY_TIME) {
+                i++;
+                if (content == null) {
+                    content = httpPost(url, Consts.UTF_8);
                 }
             }
             if (content == null) {

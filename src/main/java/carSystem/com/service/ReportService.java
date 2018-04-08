@@ -27,6 +27,7 @@ import carSystem.com.service.report.jd.JdService;
 import carSystem.com.utils.FileUtils;
 import carSystem.com.utils.SqlBuilder;
 import carSystem.com.vo.ListQuery;
+import carSystem.com.vo.ReportDayCount;
 import carSystem.com.vo.ReportJson;
 import carSystem.com.vo.ReportVO;
 import com.alibaba.fastjson.JSON;
@@ -312,6 +313,12 @@ public class ReportService {
 
     public boolean update(Report report) {
         return reportDAO.update(report);
+    }
+
+
+    //根据用户id，查找每日报告量
+    public List<ReportDayCount> countDayReportByUserId(Integer userId) {
+        return reportDAO.countDayReportByUserId(userId);
     }
 
 }
