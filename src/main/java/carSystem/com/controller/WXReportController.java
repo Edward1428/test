@@ -182,16 +182,25 @@ public class WXReportController {
     @RequestMapping(method = RequestMethod.GET, value = "/countByDay")
     public @ResponseBody Result countAllReportByDay(@RequestHeader("sid") String sid, @RequestParam String start, @RequestParam String end) {
         User user = userService.findSid(sid);
+        List<UserCountVO> userCountVOList = new ArrayList<>();
         if (user.getRole() == Role.ADMIN.getRole()) {
             List<User> userList = userService.findAll();
-            HashMap<String, Object> map = new HashMap<>();
+
             for (User u : userList) {
                 List<ReportDayCount> reportDayCountList = reportService.countDayReportByUserId(u.getId(), start, end);
-                map.put(u.getNickName(), reportDayCountList);
+                UserCountVO userCountVO = new UserCountVO();
+                userCountVO.setUser(u);
+                userCountVO.setList(reportDayCountList);
+                userCountVOList.add(userCountVO);
             }
-            return Result.success(map);
+            return Result.success(userCountVOList);
         } else {
-            return Result.success(reportService.countDayReportByUserId(user.getId(),start, end));
+            List<ReportDayCount> reportDayCountList = reportService.countDayReportByUserId(user.getId(),start, end);
+            UserCountVO userCountVO = new UserCountVO();
+            userCountVO.setUser(user);
+            userCountVO.setList(reportDayCountList);
+            userCountVOList.add(userCountVO);
+            return Result.success(userCountVOList);
         }
     }
 
