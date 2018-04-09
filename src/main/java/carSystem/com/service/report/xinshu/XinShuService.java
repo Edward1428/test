@@ -206,6 +206,7 @@ public class XinShuService {
                     blackNameList.setBlackPublishSource(object.getString("blackPublishSource"));
                     blackNameList.setBlackHappenDate(object.getString("blackHappenDate"));
                     blackNameList.setBlackAmt(object.getString("blackAmt"));
+                    blackNameList.setBlackCount(object.getString("blackCount"));
                     blackNameList.setBlackNameId(blackNameId);
                     blackNameListDAO.insert(blackNameList);
                     }
