@@ -91,7 +91,7 @@ public class IntegralService {
 
     //查找所有log
     public List<AdminLog> findAllLog() {
-        return adminLogDAO.findAll(" order by created_at desc " );
+        return adminLogDAO.findAll("1=1 order by created_at desc " );
     }
 
     //分页查找log
