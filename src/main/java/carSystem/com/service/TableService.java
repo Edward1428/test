@@ -674,7 +674,7 @@ public class TableService {
         one.add(idCardJson);
 
         JSONObject cellJson = new JSONObject();
-        cellJson.put("msg", cellCheck.getMsg());
+        cellJson.put("msg", stringToMsg(cellCheck.getMsg()));
         cellJson.put("color", stringColor(cellCheck.getMsg()));
         JSONArray two = new JSONArray();
         two.add(cellJson);
