@@ -159,7 +159,7 @@ public class AdminController {
             total = adminLogList.size();
         } else {
             adminLogList = integralService.logQuery(listQuery);
-            total = adminLogList.size();
+            total = integralService.findAllLog().size();
         }
 
         Map<String, Object> map = new HashMap<>();
