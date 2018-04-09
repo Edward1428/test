@@ -752,11 +752,15 @@ public class TableService {
     private Integer stringColor(String s) {
         Pattern p = Pattern.compile("^命中");
         Matcher m = p.matcher(s);
+
+        Pattern a = Pattern.compile("^比中");
+        Matcher b = a.matcher(s);
+
         if (StringUtils.isNotBlank(s)) {
             if (s.equals("未命中") || s.equals("验证成功") || s.equals("有效身份证") || s.equals("认证成功")
                     || s.equals("查询成功_无数据") || s.equals("一致") || s.equals("无该手机号记录")) {
                 return 1;
-            } else if (s.equals("验证失败") || m.find() || s.equals("不一致")) {
+            } else if (s.equals("验证失败") || m.find() || s.equals("不一致") || b.find()) {
                 return -1;
             } else {
                 return 0;
@@ -832,4 +836,6 @@ public class TableService {
         sb.replace(start, end, "****");
         return sb.toString();
     }
+
+
 }
