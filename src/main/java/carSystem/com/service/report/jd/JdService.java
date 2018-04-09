@@ -305,6 +305,8 @@ public class JdService {
             case"B02": s ="贷款不良"; break;
             case"B03": s ="短时逾期"; break;
             case"B04": s ="逾期"; break;
+            case"B10": s = "疑似近期具有信贷逾期风险";break;
+            case"B11": s = "疑似历史具有信贷逾期风险";break;
             case"C01": s ="失信被执行人"; break;
             case"C02": s ="被执行人"; break;
             case"C03": s ="裁判文书"; break;
@@ -316,6 +318,8 @@ public class JdService {
             case"E02": s ="1月内多头借贷"; break;
             case"E03": s ="3月内多头借贷"; break;
             case"E04": s ="疑似多头借贷"; break;
+            case"E10": s ="1月内放款平台"; break;
+            case"E11": s = "3月内放款平台"; break;
         }
         return s;
     }

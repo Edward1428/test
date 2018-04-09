@@ -124,6 +124,7 @@ public class XinShuService {
             cellCheck.setFlag(1);
         } else {
             cellCheck.setFlag(-1);
+            cellCheck.setMsg(jsonObject.getString("msg"));
         }
         cellCheckDAO.insert(cellCheck);
     }
@@ -139,10 +140,13 @@ public class XinShuService {
 
         String rc = jsonObject.getString("rc");
         if (rc.equals("0000")) {
+            bankCard.setFlag(1);
             JSONObject data = jsonObject.getJSONObject("data");
             bankCard.setMessage(data.getString("result"));
+
         } else {
             bankCard.setFlag(-1);
+            bankCard.setMessage(jsonObject.getString("msg"));
         }
         bankCardDAO.insert(bankCard);
     }
@@ -151,6 +155,7 @@ public class XinShuService {
         String url = "http://123.59.76.144/ws/person/personBadInfo";
         String s = url+"?apikey="+apikey+"&sign="+generatedSign(sign)+"&name="+customer.getName()+"&idCard="+customer.getIdNum();
         BadRecord badRecord = new BadRecord();
+        badRecord.setReportId(reportId);
 
         JSONObject jsonObject = HttpUtils.httpPostJsonObj(s);
 
@@ -159,8 +164,12 @@ public class XinShuService {
             JSONObject data = jsonObject.getJSONObject("data");
             badRecord.setDescription(data.getString("checkMsg"));
             badRecord.setFlag(1);
+        } else if (rc.equals("0001")) {
+            badRecord.setFlag(1);
+            badRecord.setDescription(jsonObject.getString("msg"));
         } else {
             badRecord.setFlag(-1);
+            badRecord.setDescription(jsonObject.getString("msg"));
         }
         badRecordDAO.insert(badRecord);
     }
@@ -237,55 +246,6 @@ public class XinShuService {
         blackNameDAO.insert(blackName);
     }
 
-
-//    private void carshieldApi(Customer customer, Integer reportId) {
-//        String host = "https://way.jd.com";
-//        String path = "/Carshield/Blacklist";
-//
-//        String url = host + path + "?Name=" + customer.getName() + "&IdCard=" + customer.getIdNum() + "&appkey=" + JDAppKey;
-//
-//        Carshield carshield = new Carshield();
-//        carshield.setReportId(reportId);
-//
-//        try {
-//            JSONObject json = HttpUtils.httpGetJsonObj(url);
-//            String code = json.getString("code");
-//            carshield.setCode(code);
-//            carshield.setCharge(json.getString("charge"));
-//            carshield.setMsg(json.getString("msg"));
-//
-//            if (code.equals("10000")) {
-//                JSONObject result = json.getJSONObject("result");
-//                String code2 = result.getString("Code");
-//                carshield.setCode2(code2);
-//                carshield.setMessage(result.getString("Message"));
-//                if (code2.equals("200")) {
-//                    carshield.setFlag(1);
-//                    JSONObject data = result.getJSONObject("Data");
-//                    Integer count = data.getInteger("Count");
-//                    if (count == 0) {
-//                        carshield.setValue("未命中");
-//                    } else {
-//                        String s = "";
-//                        JSONArray Desc = data.getJSONArray("Desc");
-//                        for (int i = 0; i < Desc.size(); i++) {
-//                            String string = Desc.getJSONObject(i).getString("Value");
-//                            s = s + string +";";
-//                        }
-//                        carshield.setValue(s);
-//                    }
-//                    carshield.setCount(count.toString());
-//                } else {
-//                    carshield.setFlag(-1);
-//                }
-//            } else {
-//                carshield.setFlag(-1);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        carshieldDAO.insert(carshield);
-//    }
 
     private void cellLong(Customer customer, Integer reportId) {
         String url = "http://api.xinshucredit.com/ws/person/timePhoneLength";

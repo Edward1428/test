@@ -602,8 +602,16 @@ public class TableService {
         one.put("value", carshield.getValue());
         one.put("color", stringColor(carshield.getValue()));
 
-        two.put("key", "手机使用情况");
-        two.put("value", cellLong.getDescription());
+        two.put("key", "手机在网时长");
+        String s = cellLong.getDescription();
+        if (StringUtils.isNotBlank(s)) {
+            Pattern p = Pattern.compile("^在网时长");
+            Matcher m = p.matcher(s);
+            if (m.find()) {
+                s = s.substring(4);
+            }
+        }
+        two.put("value", s);
         two.put("color", 2);
 
         three.put("key", "手机归属地");
@@ -666,7 +674,7 @@ public class TableService {
         one.add(idCardJson);
 
         JSONObject cellJson = new JSONObject();
-        cellJson.put("msg", stringToMsg(cellCheck.getMsg()));
+        cellJson.put("msg", cellCheck.getMsg());
         cellJson.put("color", stringColor(cellCheck.getMsg()));
         JSONArray two = new JSONArray();
         two.add(cellJson);
@@ -777,7 +785,7 @@ public class TableService {
         Pattern p = Pattern.compile("^查询成功_有数据");
         Matcher m = p.matcher(s);
         if (StringUtils.isNotBlank(s)) {
-            if (s.equals("查询成功_无数据")) {
+            if (s.equals("查询成功_无数据") || s.equals("查询成功,无数据")) {
                 s = "未命中";
                 return s;
             } else if (m.find()){
