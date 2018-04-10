@@ -99,6 +99,7 @@ public class XinShuService {
 
         String rc = jsonObject.getString("rc");
         if (rc.equals("0000")) {
+            idCard.setOrderNo(jsonObject.getString("orderNo"));
             JSONObject data = jsonObject.getJSONObject("data");
             idCard.setMessage(data.getString("message"));
             idCard.setIdCardPhoto(data.getString("idCardPhoto"));
@@ -119,6 +120,7 @@ public class XinShuService {
 
         String rc = jsonObject.getString("rc");
         if (rc.equals("0000")) {
+            cellCheck.setOrderNo(jsonObject.getString("orderNo"));
             JSONObject data = jsonObject.getJSONObject("data");
             cellCheck.setMsg(data.getString("result").equals("T") ? "一致" : "不一致");
             cellCheck.setFlag(1);
@@ -141,6 +143,7 @@ public class XinShuService {
         String rc = jsonObject.getString("rc");
         if (rc.equals("0000")) {
             bankCard.setFlag(1);
+            bankCard.setOrderNo(jsonObject.getString("orderNo"));
             JSONObject data = jsonObject.getJSONObject("data");
             bankCard.setMessage(data.getString("result"));
 
@@ -162,6 +165,7 @@ public class XinShuService {
         String rc = jsonObject.getString("rc");
         if (rc.equals("0000")) {
             JSONObject data = jsonObject.getJSONObject("data");
+            badRecord.setOrderNo(jsonObject.getString("orderNo"));
             badRecord.setDescription(data.getString("checkMsg"));
             badRecord.setFlag(1);
         } else if (rc.equals("0001")) {
@@ -185,6 +189,7 @@ public class XinShuService {
 
         if (rc.equals("0000")) {
             JSONObject data = jsonObject.getJSONObject("data");
+            blackName.setOrderNo(jsonObject.getString("orderNo"));
             JSONArray totalCounts = data.getJSONArray("totalCounts");
             if (totalCounts.size() >= 5) {
                 blackName.setFlag(1);
@@ -257,6 +262,7 @@ public class XinShuService {
         String rc = jsonObject.getString("rc");
 
         if (rc.equals("0000")) {
+            cellLong.setOrderNo(jsonObject.getString("orderNo"));
             cellLong.setFlag(1);
             JSONObject data = jsonObject.getJSONObject("data");
             cellLong.setDescription(data.getString("message"));
