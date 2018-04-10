@@ -13,6 +13,15 @@ public class CellLong extends BaseBean {
     private String message;
     private String idcard;
     private String name;
+    private String orderNo;
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
 
     public Integer getFlag() {
         return flag;

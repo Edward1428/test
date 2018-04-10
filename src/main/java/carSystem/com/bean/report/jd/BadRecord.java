@@ -15,6 +15,15 @@ public class BadRecord extends BaseBean{
     private String case_time;
     private String description;
     private String res;
+    private String orderNo;
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
 
     public Integer getFlag() {
         return flag;

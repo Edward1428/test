@@ -10,6 +10,15 @@ public class IdCard extends BaseBean{
     private String area;
     private String birthday;
     private String sex;
+    private String orderNo;
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
 
     public Integer getFlag() {
         return flag;

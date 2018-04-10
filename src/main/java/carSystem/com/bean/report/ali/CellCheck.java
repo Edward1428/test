@@ -8,6 +8,7 @@ public class CellCheck extends BaseBean {
 
     private String code;
     private String msg;
+    private String orderNo;
 
     public Integer getFlag() {
         return flag;
@@ -39,5 +40,13 @@ public class CellCheck extends BaseBean {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
     }
 }
