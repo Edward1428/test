@@ -53,11 +53,16 @@ public class ReportDAO extends BaseDAO<Report> {
 
     public List<RCIVO> findDetail(Integer page, Integer limit) {
 
-        Integer start = (page - 1) * limit;
+        if (page > 0 && limit > 0) {
+            Integer start = (page - 1) * limit;
 
-        List<RCIVO> list = queryHelper.queryAll(RCIVO.class, "select c.*, i.* from customer as c, report as r, idCard as i "+
-                "where r.customerId = c.id and r.id = i.reportId limit ?,? ", start, limit);
-        return list;
+            List<RCIVO> list = queryHelper.queryAll(RCIVO.class, "select c.*, i.* from customer as c, report as r, idCard as i " +
+                    "where r.customerId = c.id and r.id = i.reportId limit ?,? ", start, limit);
+            return list;
+        } else {
+            return null;
+        }
+
     }
 
     public List<ExcelVO> export(Integer userId) {
