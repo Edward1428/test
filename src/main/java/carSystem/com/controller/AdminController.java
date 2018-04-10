@@ -11,10 +11,7 @@ import carSystem.com.service.CustomerService;
 import carSystem.com.service.IntegralService;
 import carSystem.com.service.ReportService;
 import carSystem.com.service.UserService;
-import carSystem.com.vo.ListQuery;
-import carSystem.com.vo.Result;
-import carSystem.com.vo.UserTableVO;
-import carSystem.com.vo.UserVO;
+import carSystem.com.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -190,11 +187,11 @@ public class AdminController {
         }
     }
 
-    //用于前端导出，返回所有customer
+    //用于前端导出，返回所有这个用户的所有
     @LoginRequired(role = Role.ADMIN)
     @RequestMapping(method = RequestMethod.GET, value = "/customer/{userId}")
     public @ResponseBody Result reportExcel(@PathVariable Integer userId) {
-        List<Customer> customerList = customerService.findAllByUserId(userId);
-        return Result.success(customerList);
+        List<ExcelVO> excelVOList = reportService.export(userId);
+        return Result.success(excelVOList);
     }
 }

@@ -196,9 +196,15 @@ public class ReportController {
             }
             return Result.success(map);
         } else {
-            return Result.success(reportService.countDayReportByUserId(user.getId(),start, end));
+            return Result.success(reportService.countDayReportByUserId(user.getId(), start, end));
         }
 
     }
 
+    @LoginRequired(role = Role.ADMIN)
+    @RequestMapping(method = RequestMethod.GET, value = "/detail")
+    public @ResponseBody
+    Result detail(@RequestAttribute User user, @RequestParam Integer page, @RequestParam Integer limit) {
+        return Result.success(reportService.findDetail(page, limit));
+    }
 }

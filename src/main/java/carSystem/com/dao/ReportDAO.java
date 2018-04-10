@@ -2,6 +2,8 @@ package carSystem.com.dao;
 
 import carSystem.com.bean.Report;
 import carSystem.com.dbmanager.QueryHelper;
+import carSystem.com.vo.ExcelVO;
+import carSystem.com.vo.RCIVO;
 import carSystem.com.vo.ReportDayCount;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,4 +51,23 @@ public class ReportDAO extends BaseDAO<Report> {
                 , userId, start, end);
     }
 
+    public List<RCIVO> findDetail(Integer page, Integer limit) {
+
+        Integer start = (page - 1) * limit;
+
+        List<RCIVO> list = queryHelper.queryAll(RCIVO.class, "select c.*, i.* from customer as c, report as r, idCard as i "+
+                "where r.customerId = c.id and r.id = i.reportId limit ?,? ", start, limit);
+        return list;
+    }
+
+    public List<ExcelVO> export(Integer userId) {
+        String sql = " select a.*, bc.message as bankcardCheck from "+
+                " (select re.id, re.created_at, cu.name, cu.cell, cu.idNum, cu.bankId,cc.msg as cellCheck, ic.message as idcardCheck,  ca.value as carCheck, " +
+                " cl.description as cellLong, cell.prov, cell.city, cell.name as cellName, bl.blackCount1, bl.blackCount2, bl.blackCount3, bl.blackCount4, bl.blackCount5, br.description as bad "+
+                " from report as re, customer as cu, idcard as ic, cellcheck as cc,  carshield as ca, celllong as cl, cell, blackname as bl, badrecord as br "+
+                " where cu.id = re.customerId and re.id = ic.reportId and re.id = cc.reportId  and re.id = ca.reportId and re.id = cl.reportId "+
+                " and re.id = cell.reportId and re.id = bl.reportId and re.id = br.reportId and re.status = 0 and re.userId = ?)as a "+
+                " left join bankcard as bc on a.id = bc.reportId ";
+        return queryHelper.queryAll(ExcelVO.class, sql, userId);
+    }
 }

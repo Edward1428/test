@@ -204,5 +204,15 @@ public class WXReportController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/detail")
+    public @ResponseBody Result findDetail(@RequestHeader("sid") String sid, @RequestParam Integer page, @RequestParam Integer limit) {
+        User user = userService.findSid(sid);
+        if (user.getRole() == Role.ADMIN.getRole()) {
+            return Result.success(reportService.findDetail(page, limit));
+        } else {
+            return Result.failed("您没有权限");
+        }
+    }
+
 
 }

@@ -26,10 +26,7 @@ import carSystem.com.service.report.baiRong.strategy.*;
 import carSystem.com.service.report.jd.JdService;
 import carSystem.com.utils.FileUtils;
 import carSystem.com.utils.SqlBuilder;
-import carSystem.com.vo.ListQuery;
-import carSystem.com.vo.ReportDayCount;
-import carSystem.com.vo.ReportJson;
-import carSystem.com.vo.ReportVO;
+import carSystem.com.vo.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -38,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -319,6 +317,17 @@ public class ReportService {
     //根据用户id，查找每日报告量
     public List<ReportDayCount> countDayReportByUserId(Integer userId, String start, String end) {
         return reportDAO.countDayReportByUserId(userId, start, end);
+    }
+
+
+    //用于返回Report,Customer,IdCard
+    public List<RCIVO> findDetail(Integer page, Integer limit) {
+        return reportDAO.findDetail(page, limit);
+    }
+
+    //用于前端导出
+    public List<ExcelVO> export(Integer userId) {
+        return reportDAO.export(userId);
     }
 
 }
