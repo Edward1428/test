@@ -246,9 +246,8 @@ public class XinShuService {
             jdService.insertSelfBlackName(blackNameId, customer.getIdNum());
         } else {
             blackName.setFlag(-1);
+            blackNameDAO.insert(blackName);
         }
-
-        blackNameDAO.insert(blackName);
     }
 
 

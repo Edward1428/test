@@ -330,4 +330,9 @@ public class ReportService {
         return reportDAO.export(userId);
     }
 
+    //用于前端导出所有报告
+    public List<ExcelVO> exportAll() {
+        return reportDAO.exportAll();
+    }
+
 }

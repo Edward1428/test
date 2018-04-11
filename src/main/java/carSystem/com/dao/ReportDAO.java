@@ -66,13 +66,46 @@ public class ReportDAO extends BaseDAO<Report> {
     }
 
     public List<ExcelVO> export(Integer userId) {
-        String sql = " select a.*, bc.message as bankcardCheck from "+
-                " (select re.id, re.created_at, cu.name, cu.cell, cu.idNum, cu.bankId,cc.msg as cellCheck, ic.message as idcardCheck,  ca.value as carCheck, " +
-                " cl.description as cellLong, cell.prov, cell.city, cell.name as cellName, bl.blackCount1, bl.blackCount2, bl.blackCount3, bl.blackCount4, bl.blackCount5, br.description as bad "+
-                " from report as re, customer as cu, idcard as ic, cellcheck as cc,  carshield as ca, celllong as cl, cell, blackname as bl, badrecord as br "+
-                " where cu.id = re.customerId and re.id = ic.reportId and re.id = cc.reportId  and re.id = ca.reportId and re.id = cl.reportId "+
-                " and re.id = cell.reportId and re.id = bl.reportId and re.id = br.reportId and re.status = 0 and re.userId = ?)as a "+
-                " left join bankcard as bc on a.id = bc.reportId ";
+        String sql =
+                "select distinct "+
+                    "a.nickName, a.id, a.created_at, cu.name, cu.cell, cu.idNum, cu.bankId, cs.value as carCheck, ic.message as idcardCheck, " +
+                    "cc.msg as cellCheck, bc.message as bankcardCheck, cl.description as cellLong, cell.prov, cell.city, "+
+                    "cell.name as cellName, bl.blackCount1, bl.blackCount2, bl.blackCount3, bl.blackCount4, bl.blackCount5, "+
+                    "br.description as bad "+
+                "from "+
+                    "(select u.nickName, r.id, r.customerId, r.created_at from report as r, user as u where r.status = 0 and r.userId = u.id and u.id = ?) as a "+
+                "left join customer as cu on a.customerId = cu.id "+
+                "left join carshield as cs on a.id = cs.reportId "+
+                "left join idcard as ic on a.id = ic.reportId "+
+                "left join cellcheck as cc on a.id = cc.reportId "+
+                "left join bankcard as bc on a.id = bc.reportId "+
+                "left join celllong as cl on a.id = cl.reportId "+
+                "left join cell on a.id = cell.reportId "+
+                "left join blackname as bl on a.id = bl.reportId "+
+                "left join badrecord as br on a.id = br.reportId "+
+                "order by nickName, created_at desc ";
         return queryHelper.queryAll(ExcelVO.class, sql, userId);
+    }
+
+    public List<ExcelVO> exportAll() {
+        String sql =
+                "select distinct "+
+                        "a.nickName, a.id, a.created_at, cu.name, cu.cell, cu.idNum, cu.bankId, cs.value as carCheck, ic.message as idcardCheck, " +
+                        "cc.msg as cellCheck, bc.message as bankcardCheck, cl.description as cellLong, cell.prov, cell.city, "+
+                        "cell.name as cellName, bl.blackCount1, bl.blackCount2, bl.blackCount3, bl.blackCount4, bl.blackCount5, "+
+                        "br.description as bad "+
+                        "from "+
+                        "(select u.nickName, r.id, r.customerId, r.created_at from report as r, user as u where r.status = 0 and r.userId = u.id) as a "+
+                        "left join customer as cu on a.customerId = cu.id "+
+                        "left join carshield as cs on a.id = cs.reportId "+
+                        "left join idcard as ic on a.id = ic.reportId "+
+                        "left join cellcheck as cc on a.id = cc.reportId "+
+                        "left join bankcard as bc on a.id = bc.reportId "+
+                        "left join celllong as cl on a.id = cl.reportId "+
+                        "left join cell on a.id = cell.reportId "+
+                        "left join blackname as bl on a.id = bl.reportId "+
+                        "left join badrecord as br on a.id = br.reportId "+
+                        "order by nickName, created_at desc";
+        return queryHelper.queryAll(ExcelVO.class, sql);
     }
 }

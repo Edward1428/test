@@ -867,6 +867,7 @@ CREATE TABLE bankcard(
   reportId INT UNSIGNED NOT NULL COMMENT '',
   flag SMALLINT DEFAULT 0 ,
   message VARCHAR(24)  DEFAULT '',
+  orderNo VARCHAR(64)  DEFAULT '',
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET =utf8 COMMENT = '阿里银行卡三要素';
 
@@ -875,7 +876,7 @@ CREATE TABLE blackname(
   reportId INT UNSIGNED NOT NULL COMMENT '',
   flag SMALLINT DEFAULT 0 ,
   msg VARCHAR(24) DEFAULT '',
-  orderNo VARCHAR(36) DEFAULT '',
+  orderNo VARCHAR(64) DEFAULT '',
   blackType1 VARCHAR(24)  DEFAULT '',
   blackCount1 VARCHAR(24)  DEFAULT '',
   blackType2 VARCHAR(24)  DEFAULT '',
@@ -898,6 +899,7 @@ CREATE TABLE blacknamelist(
   blackHappenDate VARCHAR(24)  DEFAULT '',
   blackAmt VARCHAR(24) DEFAULT '金额',
   blackPublishSource VARCHAR(24)  DEFAULT '',
+  blackCount VARCHAR(24)  DEFAULT '',
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET =utf8 COMMENT = '阿里黑名单中的list数据';
 
@@ -919,6 +921,7 @@ CREATE TABLE cellcheck(
   flag SMALLINT DEFAULT 0 ,
   code VARCHAR(24)  DEFAULT '',
   msg VARCHAR(24)  DEFAULT '',
+  orderNo VARCHAR(64)DEFAULT '',
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET =utf8 COMMENT = '阿里手机验证';
 
@@ -931,6 +934,7 @@ CREATE TABLE idcard(
   area VARCHAR(24)  DEFAULT '',
   birthday VARCHAR(24)  DEFAULT '',
   sex VARCHAR(24)  DEFAULT '',
+  orderNo VARCHAR(64)DEFAULT '',
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET =utf8 COMMENT = '阿里身份证实名认证返回照片';
 
@@ -947,6 +951,7 @@ CREATE TABLE badrecord(
   case_time VARCHAR(24)  DEFAULT '',
   description VARCHAR(128)  DEFAULT '',
   res VARCHAR(24)  DEFAULT '',
+  orderNo VARCHAR(64) DEFAULT '',
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET =utf8 COMMENT = '狗东不良行为记录查询';
 
@@ -962,6 +967,7 @@ CREATE TABLE celllong(
   message VARCHAR(24)  DEFAULT '',
   idcard VARCHAR(24)  DEFAULT '',
   name VARCHAR(24)  DEFAULT '',
+  orderNo VARCHAR(64) DEFAULT '',
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET =utf8 COMMENT = '京东手机在线时长';
 

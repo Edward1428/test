@@ -194,4 +194,12 @@ public class AdminController {
         List<ExcelVO> excelVOList = reportService.export(userId);
         return Result.success(excelVOList);
     }
+
+    //用户前端导出，返回所有用户所有报告
+    @LoginRequired(role = Role.ADMIN)
+    @RequestMapping(method = RequestMethod.GET, value = "/customer/all")
+    public @ResponseBody Result allReportExcel() {
+        List<ExcelVO> excelVOList = reportService.exportAll();
+        return Result.success(excelVOList);
+    }
 }

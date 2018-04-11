@@ -3,6 +3,8 @@ package carSystem.com.vo;
 import java.sql.Timestamp;
 
 public class ExcelVO {
+    private String nickName;
+    private Integer id;
     private Timestamp created_at;
     private String name;
     private String cell;
@@ -22,6 +24,22 @@ public class ExcelVO {
     private String blackCount4;
     private String blackCount5;
     private String bad;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
     public Timestamp getCreated_at() {
         return created_at;
