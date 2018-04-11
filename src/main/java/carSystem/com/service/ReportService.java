@@ -267,7 +267,7 @@ public class ReportService {
         DateTime start = end.minusDays(MinusDays);
 
         SqlBuilder sqlBuilder = new SqlBuilder();
-        sqlBuilder.appendSql(" select customer.* from customer, report where report.userId = ? ").appendValue(UserId);
+        sqlBuilder.appendSql(" select customer.* from customer, report where report.userId = ").appendValue(UserId);
 
         sqlBuilder.appendSql(" and report.created_at between timestamp(").appendValue(start.toString("yyyy-MM-dd HH:mm:ss"))
                 .appendSql(") and timestamp(").appendValue(end.toString("yyyy-MM-dd HH:mm:ss")).appendSql(") ");

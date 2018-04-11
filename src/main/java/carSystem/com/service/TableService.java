@@ -776,6 +776,8 @@ public class TableService {
                 s = "一致";
             } else if (s.equals("无效身份证") || s.equals("库中无此号，其它错误信息")) {
                 s = "无效身份证";
+            } else if (s.equals("库中无记录")) {
+                s = "库中无记录";
             } else {
                 s = "不一致";
             }

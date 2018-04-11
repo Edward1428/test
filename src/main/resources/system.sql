@@ -866,7 +866,7 @@ CREATE TABLE bankcard(
   id INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '编号',
   reportId INT UNSIGNED NOT NULL COMMENT '',
   flag SMALLINT DEFAULT 0 ,
-  message VARCHAR(24)  DEFAULT '',
+  message VARCHAR(256)  DEFAULT '',
   orderNo VARCHAR(64)  DEFAULT '',
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET =utf8 COMMENT = '阿里银行卡三要素';
@@ -875,7 +875,7 @@ CREATE TABLE blackname(
   id INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '编号',
   reportId INT UNSIGNED NOT NULL COMMENT '',
   flag SMALLINT DEFAULT 0 ,
-  msg VARCHAR(24) DEFAULT '',
+  msg VARCHAR(256) DEFAULT '',
   orderNo VARCHAR(64) DEFAULT '',
   blackType1 VARCHAR(24)  DEFAULT '',
   blackCount1 VARCHAR(24)  DEFAULT '',
@@ -911,7 +911,7 @@ CREATE TABLE cell(
   prov VARCHAR(24)  DEFAULT '',
   name VARCHAR(24)  DEFAULT '',
   city VARCHAR(24)  DEFAULT '',
-  msg VARCHAR(24)  DEFAULT '',
+  msg VARCHAR(256)  DEFAULT '',
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET =utf8 COMMENT = '阿里手机归属地';
 
@@ -920,7 +920,7 @@ CREATE TABLE cellcheck(
   reportId INT UNSIGNED NOT NULL COMMENT '',
   flag SMALLINT DEFAULT 0 ,
   code VARCHAR(24)  DEFAULT '',
-  msg VARCHAR(24)  DEFAULT '',
+  msg VARCHAR(256)  DEFAULT '',
   orderNo VARCHAR(64)DEFAULT '',
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET =utf8 COMMENT = '阿里手机验证';
@@ -944,9 +944,10 @@ CREATE TABLE badrecord(
   flag SMALLINT DEFAULT 0 ,
   code VARCHAR(24)  DEFAULT '',
   code2 VARCHAR(24)  DEFAULT '',
-  msg VARCHAR(24)  DEFAULT '',
-  message VARCHAR(24)  DEFAULT '',
+  msg VARCHAR(256)  DEFAULT '',
+  message VARCHAR(256)  DEFAULT '',
   name VARCHAR(24)  DEFAULT '',
+  idcard VARCHAR(24)  DEFAULT '',
   idcard VARCHAR(24)  DEFAULT '',
   case_time VARCHAR(24)  DEFAULT '',
   description VARCHAR(128)  DEFAULT '',
@@ -961,10 +962,10 @@ CREATE TABLE celllong(
   flag SMALLINT DEFAULT 0 ,
   code VARCHAR(24)  DEFAULT '',
   charge VARCHAR(24)  DEFAULT '',
-  msg VARCHAR(24)  DEFAULT '',
+  msg VARCHAR(256)  DEFAULT '',
   mobile VARCHAR(24)  DEFAULT '',
   description VARCHAR(24)  DEFAULT '',
-  message VARCHAR(24)  DEFAULT '',
+  message VARCHAR(256)  DEFAULT '',
   idcard VARCHAR(24)  DEFAULT '',
   name VARCHAR(24)  DEFAULT '',
   orderNo VARCHAR(64) DEFAULT '',
@@ -978,7 +979,7 @@ CREATE TABLE carshield(
   code VARCHAR(24)  DEFAULT '',
   code2 VARCHAR(24)  DEFAULT '',
   charge VARCHAR(24)  DEFAULT '',
-  msg VARCHAR(24)  DEFAULT '',
+  msg VARCHAR(256)  DEFAULT '',
   count VARCHAR(24)  DEFAULT '',
   value VARCHAR(128)  DEFAULT '',
   message VARCHAR(24)  DEFAULT '',
