@@ -275,6 +275,4 @@ public class XinShuService {
         }
         cellLongDAO.insert(cellLong);
     }
-
-
 }

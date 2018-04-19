@@ -133,7 +133,7 @@ public class ReportController {
             }
         }
 
-        TableData tableData = tableService.tableData(reportId);
+        TableData tableData = tableService.tableData(reportId, Report.PC_Request_Type);
         return Result.success(tableData);
     }
 

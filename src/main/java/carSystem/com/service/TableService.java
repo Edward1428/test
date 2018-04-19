@@ -86,7 +86,7 @@ public class TableService {
     @Autowired
     private ReportDAO reportDAO;
 
-    public TableData tableData(Integer reportId) {
+    public TableData tableData(Integer reportId, short requestType) {
         Report report = reportService.findById(reportId);
         Map<String, Boolean> show = toShow();
         TableData tableData = new TableData();
@@ -128,7 +128,7 @@ public class TableService {
                     break;
                 //京东阿里合集
                 case "6":
-                    tableData.setCustomerTable(toCustomerTable(reportId));
+                    tableData.setCustomerTable(toCustomerTable(reportId, requestType));
                     tableData.setAliJdTable(toAliJdTable(reportId));
                     tableData.setBlackNameLists(toBlackNameList(reportId));
                     tableData.setCheck(toCheck(reportId));
@@ -534,7 +534,7 @@ public class TableService {
     }
 
     //阿里京东用户资料表单
-    private JSONArray toCustomerTable(@NotNull Integer reportId) {
+    private JSONArray toCustomerTable(@NotNull Integer reportId, short requestType) {
         Report report = reportDAO.findById(reportId);
         Customer customer = customerService.findById(report.getCustomerId());
 
@@ -552,7 +552,11 @@ public class TableService {
         cell.put("value", stringReplace(customer.getCell(), 3, 7));
         JSONObject idCard = new JSONObject();
         idCard.put("key", "被验证人身份证");
-        idCard.put("value", stringReplace(customer.getIdNum(), 6, 14));
+        if (requestType == Report.PC_Request_Type) {
+            idCard.put("value", stringReplace(customer.getIdNum(), 6, 14));
+        } else {
+            idCard.put("value", customer.getIdNum());
+        }
         JSONObject bank = new JSONObject();
         bank.put("key", "被验证人银行卡");
         if (StringUtils.isNotBlank(customer.getBankId())) {
@@ -707,8 +711,26 @@ public class TableService {
     private List<BlackNameList> toBlackNameList(@NotNull Integer reportId) {
         BlackName blackName = jdService.findBlackName(reportId);
         List<BlackNameList> blackNameListList = jdService.findBlackNameList(blackName.getId());
+
+        for (BlackNameList blackNameList : blackNameListList) {
+            String s = blackNameList.getBlackFacts();
+            if (StringUtils.isNotBlank(s)) {
+                s = replaceString(s);
+                blackNameList.setBlackFacts(s);
+            }
+        }
+
         return blackNameListList;
     }
+
+    private String replaceString(String s) {
+        if (s.equals("存在骗贷行为")) {
+            return "疑似存在骗贷行为";
+        } else {
+            return s;
+        }
+    }
+
 
     //用于前端判断是否显示,默认值全部false
     private Map<String, Boolean> toShow() {

@@ -133,7 +133,7 @@ public class WXReportController {
                 }
             }
 
-            TableData tableData = tableService.tableData(reportId);
+            TableData tableData = tableService.tableData(reportId, Report.WX_Request_Type);
             return Result.success(tableData);
         }
     }
