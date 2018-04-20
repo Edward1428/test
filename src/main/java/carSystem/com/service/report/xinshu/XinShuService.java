@@ -159,14 +159,16 @@ public class XinShuService {
         String s = url+"?apikey="+apikey+"&sign="+generatedSign(sign)+"&name="+customer.getName()+"&idCard="+customer.getIdNum();
         BadRecord badRecord = new BadRecord();
         badRecord.setReportId(reportId);
-
         JSONObject jsonObject = HttpUtils.httpPostJsonObj(s);
 
         String rc = jsonObject.getString("rc");
+        badRecord.setOrderNo(jsonObject.getString("orderNo"));
         if (rc.equals("0000")) {
             JSONObject data = jsonObject.getJSONObject("data");
-            badRecord.setOrderNo(jsonObject.getString("orderNo"));
             badRecord.setDescription(data.getString("checkMsg"));
+            badRecord.setCase_time(data.getString("caseTime"));
+            badRecord.setCode2(data.getString("caseType"));
+            badRecord.setCode(data.getString("checkCount"));
             badRecord.setFlag(1);
         } else if (rc.equals("0001")) {
             badRecord.setFlag(1);

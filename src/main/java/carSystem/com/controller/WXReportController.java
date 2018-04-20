@@ -108,8 +108,9 @@ public class WXReportController {
                             TelStatus telStatus = apiService.telStatusApi(customer, reportId);
                             break;
                         case 6:
-                            AliApi aliApi = apiService.aliApi(customer, reportId);
-                            JdApi jdApi = apiService.jdApi(customer, reportId);
+//                            AliApi aliApi = apiService.aliApi(customer, reportId);
+//                            JdApi jdApi = apiService.jdApi(customer, reportId);
+                            apiService.xinShuApi(customer, reportId);
                             break;
                     }
                 }
