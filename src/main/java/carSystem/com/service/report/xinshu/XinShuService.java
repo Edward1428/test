@@ -133,8 +133,10 @@ public class XinShuService {
 
     private void bankCheck(Customer customer, Integer reportId) {
         String url = "http://123.59.76.144/ws/personAuth/unionPay34Element";
+//        String s = url+"?apikey="+apikey+"&sign="+generatedSign(sign)+"&name="+customer.getName()+"&idCard="+customer.getIdNum()
+//                + "&accountNO="+customer.getBankId()+"&bankPreMobile="+customer.getCell();
         String s = url+"?apikey="+apikey+"&sign="+generatedSign(sign)+"&name="+customer.getName()+"&idCard="+customer.getIdNum()
-                + "&accountNO="+customer.getBankId()+"&bankPreMobile="+customer.getCell();
+                + "&accountNO="+customer.getBankId();
         BankCard bankCard = new BankCard();
         bankCard.setReportId(reportId);
 

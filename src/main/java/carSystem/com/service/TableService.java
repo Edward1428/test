@@ -614,6 +614,11 @@ public class TableService {
             if (m.find()) {
                 s = s.substring(4);
             }
+            if (s.equals("查询无记录")) {
+                s = "新手机号码";
+            }
+        } else {
+            s = "非典型手机号码";
         }
         two.put("value", s);
         two.put("color", 2);
