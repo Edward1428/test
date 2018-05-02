@@ -787,7 +787,7 @@ public class TableService {
             if (s.equals("未命中") || s.equals("验证成功") || s.equals("有效身份证") || s.equals("认证成功")
                     || s.equals("查询成功_无数据") || s.equals("一致") || s.equals("无该手机号记录")) {
                 return 1;
-            } else if (s.equals("验证失败") || m.find() || s.equals("不一致") || b.find()) {
+            } else if (s.equals("验证失败") || m.find() || s.equals("不一致") || b.find() || s.equals("风险预警;")) {
                 return -1;
             } else {
                 return 0;
