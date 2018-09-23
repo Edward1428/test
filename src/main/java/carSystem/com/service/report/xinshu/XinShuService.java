@@ -91,7 +91,7 @@ public class XinShuService {
     }
 
     private void idCardPhoto(Customer customer, Integer reportId) {
-        String url = "http://123.59.76.144/ws/person/idCardPhoto";
+        String url = "http://123.59.76.144/ws/person/idCertificate";
         String s = url+"?apikey="+apikey+"&sign="+generatedSign(sign)+"&idCardName="+customer.getName()+"&idCardCode="+customer.getIdNum();
         IdCard idCard = new IdCard();
         idCard.setReportId(reportId);
@@ -102,7 +102,7 @@ public class XinShuService {
             idCard.setOrderNo(jsonObject.getString("orderNo"));
             JSONObject data = jsonObject.getJSONObject("data");
             idCard.setMessage(data.getString("message"));
-            idCard.setIdCardPhoto(data.getString("idCardPhoto"));
+//            idCard.setIdCardPhoto(data.getString("idCardPhoto"));
             idCard.setFlag(1);
         } else {
             idCard.setFlag(-1);
