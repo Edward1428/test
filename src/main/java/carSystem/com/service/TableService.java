@@ -708,7 +708,12 @@ public class TableService {
             check.put("bankCard", three);
         }
 
-        check.put("photo", "data:image/png;base64,"+idCard.getIdCardPhoto());
+        if (StringUtils.isNotBlank(idCard.getIdCardPhoto())) {
+            check.put("photo", "data:image/png;base64," + idCard.getIdCardPhoto());
+        } else {
+            check.put("photo", "");
+        }
+
         return check;
     }
 
